@@ -1,0 +1,130 @@
+﻿@using KhaKhau.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+@inject SignInManager<ApplicationUser> SignInManager
+
+@inject UserManager<ApplicationUser> UserManager
+@model IEnumerable<Order>
+@{
+    Layout = "~/Views/Shared/_DatMonLayout.cshtml";
+
+}
+
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+
+<a class="nav-link" href="/UserOrder/UserOrders" style="color:#4A4947 ;text-transform:uppercase;font-size:30px;font-weight:bold">
+	<span class="d-inline-flex">
+		<p style="color:#C5705D;text-transform:uppercase;font-size:30px;font-weight:bold">My </p><br/> <p>Orders</p>
+    </span>
+</a>
+    <div class="justify-content-center mx-5 my-3">
+    @if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-striped" id="tbl_css">
+            <tr >
+                <th>Ngày đặt</th>
+                <th>Mã đơn</th>
+				<th>Tình trạng</th>
+				<th>Tổng tiền</th>
+
+                <th>Chi tiết đơn hàng</th>
+            </tr>
+           
+                @foreach (var order in Model)   
+               {
+                <tr>
+                    <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
+                    <td>@order.Id</td>
+                  
+                            @{
+                                switch (order.OrderStatus.StatusName)
+                                {
+                                    case "choxacnhan":
+                                <td>
+                                    Chờ xác nhận
+                                </td>
+                                        break;
+                                    case "danggiao":
+                                <td>
+                                    Đang giao
+                                </td>
+                                        break;
+                                    case "nhanhang":
+                                <td>
+                                    Nhận hàng
+                                </td>
+                                        break;
+                                    case "huy":
+                                <td class="text-danger">
+                                    Hủy
+                                </td>
+                                        break;
+                                    default:
+                                <td>Hoàn tiền</td>
+                                        break;
+
+                                }
+
+                            }
+                    @if (order.OrderDetail != null && order.OrderDetail.Count > 0)
+                    {
+
+                        <td>
+                                @(order.OrderDetail.Select(item => item.Product.Price * item.Quantity).Sum())
+
+                            </td>
+                <td>
+
+						<button type="button" data-bs-toggle="modal" data-bs-target="#modal-@order.Id" id="btnDetail_css">
+							Order-Detail                     
+                         </button>
+               
+
+                      @await Html.PartialAsync("/Areas/Admin/Views/OrderManager/_OrderDetailModal.cshtml", new OrderDetailModal { DivId = order.Id.ToString(), OrderDetail = order.OrderDetail })
+
+                </td>   
+                    }
+                </tr>
+                   
+               }
+               </table>
+    }
+      
+    
+    else
+    {
+        <h5>No orders</h5>
+    }
+   
+    </div>
+
+
+  
+<style>
+    #tbl_css{
+        border-radius:15px;
+        padding:15px,32px;
+        background-color: #F8EDE3;
+    }
+
+    #tlb2_css {
+        background-color: #D0B8A8;
+    }
+    .table.td{
+      background-color:white;
+    }
+
+    #btnDetail_css{
+        border-radius:15px;
+        padding:15px,32px;
+        display:block;
+        background-color: #C5705D;
+        border-color: #4A4947;
+    }
+
+    #btnDetail_css:hover{
+
+    }
+</style>

@@ -1,0 +1,77 @@
+﻿
+body {
+    background-color: #D0B8A8;
+}
+
+.card {
+    background-color: #fff;
+    width: 300px;
+    border: none;
+    border-radius: 16px;
+}
+
+.info {
+    line-height: 19px;
+}
+
+.name {
+    color: #C5705D;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.order {
+    font-size: 14px;
+    font-weight: 400;
+    color: #b7b5b5;
+}
+
+.detail {
+    line-height: 19px;
+}
+
+.summery {
+    color: #d2cfcf;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+
+
+.text span {
+   color: #C5705D;   
+}
+
+.new {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.money {
+    font-size: 14px;
+    font-weight: 500;
+    color: #C5705D;
+}
+
+.address {
+    color: #d2cfcf;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.last {
+    background-color: #3a9800;
+}
+.last a{
+    font-size: 18px;
+    font-weight: 500;
+    color: #C5705D;
+}
+
+
+.address-line a {
+    font-size: 11px;
+    font-weight: 700;
+     
+}

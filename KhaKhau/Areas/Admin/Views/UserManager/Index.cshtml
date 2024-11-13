@@ -1,0 +1,66 @@
+﻿@using KhaKhau.Areas.Identity.Data
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@inject SignInManager<ApplicationUser> SignInManager
+
+@inject UserManager<ApplicationUser> UserManager
+
+@model IEnumerable<KhaKhau.Areas.Identity.Data.ApplicationUser>
+<div class="container-fluid"></div>
+<h1>List Menu</h1>
+<a class="btn btn-light" id="btn-create" asp-area="Admin" asp-controller="UserManager" asp-action="Add">Create New</a>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>PhoneNumber</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td> 
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.Address</td>
+                <td>@user.PhoneNumber</td>
+
+
+                
+               
+                <td>
+                    @if (user.Id.Equals("da9c226b-c79b-4d64-853d-19dd75bc50ef"))
+                    {
+                       <div style="display:inline-flex">
+                        <a class="btn btn-info" asp-action="Display" asp-route-id="@user.Id">View</a>
+						|	
+                        <p class="text-justify">Admin</p>
+						</div>
+                    }
+                    else
+                    {
+                        <a class="btn btn-info" asp-action="Display" asp-route-id="@user.Id">View</a>
+                        <a class="btn btn-success" asp-action="Update" asp-route-id="@user.Id">Edit</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+                    }
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+
+</style>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+

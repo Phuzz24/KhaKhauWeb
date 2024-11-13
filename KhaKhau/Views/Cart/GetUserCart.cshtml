@@ -1,0 +1,73 @@
+﻿@model ShoppingCart
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<partial name="_HeaderLayout"/>
+<div style="width:90%;margin:auto" class="mt-2">
+    @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
+    {
+        <h5>My Cart</h5>
+
+        <table class="table table-striped">
+            <tr>
+                <th>Product</th>
+                <th>Image</th>
+                <th>Category</th>
+                <th>Unit Price(VND)</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var item in Model.CartDetails)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(item.Product.ImageUrl))
+                        {
+                            <img src="/images/NoImage.png" style="width:80px;height:100px" />
+                        }
+                        else
+                        {
+                            <img src="@item.Product.ImageUrl" style="width:80px;height:100px" />
+                        }
+                    </td>
+                    <td>@item.Product.Category.Name</td>
+                    <td>@item.Product.Price.ToString("#,##0") X @item.Quantity</td>
+              
+                    <td> @(item.Product.Price * item.Quantity)</td>
+                    <td>
+                        @* Increase Quantity button should be invisible if not enough stock*@
+                        @if (item.Quantity < item.Product.Stock.Quantity)
+                        { 
+                            <a class="btn btn-info" href="/Cart/AddItem?productId=@item.ProductId&&redirect=1">+</a>
+                         }
+                        else
+                        {
+                            <span style="border: 1px solid;padding: 8px 8px;color: red;border-radius: 5px;margin-right:4px">Out of stock </span>
+                        }
+                        <a class="btn btn-danger" href="/cart/removeitem?productid=@item.ProductId">-</a>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <div class="my-2">
+            <h5>Total(VND): </h5>
+            @(Model.CartDetails.Select(item => item.Product.Price * item.Quantity).Sum())
+        </div>
+
+        <div class="my-2">
+            <a class="btn btn-primary" href="/Cart/Checkout">Checkout</a>
+        </div>
+
+    }
+    else
+    {
+        <h5>Cart is empty</h5>
+    }
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>

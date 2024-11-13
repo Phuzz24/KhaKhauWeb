@@ -1,0 +1,149 @@
+﻿@model KhaKhau.Areas.Admin.Models.Product
+@{
+    ViewData["Title"] = "Chi tiet san pham";
+    Layout = "~/Views/Shared/_DatMonLayout.cshtml";
+}
+
+ <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<partial name="_HeaderLayout" style="padding-top:0px" />
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-body">
+          
+            <div class="row">
+                <div class="col-lg-5 col-md-5 col-sm-6">
+                    <div class="white-box text-center">
+                        <img src=@Model.ImageUrl width="430" height="600" style="display:flex;object-fit:cover" class="img_display">
+                        </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6">    
+                    <p style="color:#C5705D">
+                        <a class="text-decoration-none" style="color:#C5705D; text-transform:uppercase; font-weight:bold" href="/Home/Index">
+                            Trang chủ
+                        </a>
+                        >
+                        <a class="text-decoration-none" style="color:#C5705D;text-transform:uppercase; font-weight:bold" href="/Product/Index">Sản phẩm</a>
+                        >
+                        <a class="text-decoration-none" style="color:#C5705D; text-transform:uppercase; font-weight:bold" asp-controler="Product" asp-action="Display" asp-route-id="@Model.Id">@Model.Name</a>
+                    </p>
+                    <h1 class="card-title" style="text-transform:uppercase;font-weight:bold;font-size:40px;color:#C5705D">@Model.Name</h1>
+                    <hr class="mt-3" style="height:1px; color:#4A4947" />
+                    
+                    <h4 class="box-title mt-4" style="color:#D0B8A8">Mô tả</h4>
+                    <p style="color:#4A4947; font-style:italic;font-size:20px">
+                            @Model.Description
+                    </p>
+                    
+                    <h2 class="mt-5 mb-5" style="color:#D0B8A8; font-weight:bold">
+                        VND @Model.Price.ToString("#,#0")
+                        <sup>
+                            <small style="border-radius:50%;background-color:brown;padding: 15px 15px;color:#F8EDE3;">36%off</small>
+						</sup>
+                    </h2>
+                    
+                    <div class="justify-content-lg-end d-inline">
+                        <button id="btn_css" class="button" onclick="add(@Model.Id)">
+                            <i class="fa fa-shopping-cart"></i>
+                            Thêm vào giỏ hàng</button>
+
+                    </div>
+                    <div class="justify-content-lg-end d-inline">
+                        <a class="btn" href="/Cart/Checkout" id="btn_css">Mua ngay</a>
+
+                    </div>
+                   
+                  
+                </div>
+
+                </div>
+                </div>
+                </div>
+                </div>
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                @* 					<h6>About</h6>
+                *@					<img src="/images/logo_res.png" />
+                <p class="text-justify">
+                    Mang trong mình ý nghĩa "ngon miệng" và "khả năng thưởng thức", <i><b>nhà hàng Khả Khẩu</b></i> là nơi giao hòa giữa truyền thống và hiện đại. Chúng tôi không chỉ mang đến những món ăn quen thuộc với hương vị đặc trưng mà còn không ngừng sáng tạo, mang đến những trải nghiệm ẩm thực mới mẻ, đáp ứng mọi khẩu vị của thực khách.
+                </p>
+            </div>
+
+            <div class="col-xs-6 col-md-3">
+                <h6>Dịch vụ</h6>
+                <ul class="footer-links">
+                    <li><a href="http://scanfcode.com/category/c-language/">Menu</a></li>
+                    <li><a href="http://scanfcode.com/category/front-end-development/">Đặt món online</a></li>
+                    @* <li><a href="http://scanfcode.com/category/back-end-development/">Đặt bàn</a></li>
+                    <li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
+                    <li><a href="http://scanfcode.com/category/android/">Android</a></li>
+                    <li><a href="http://scanfcode.com/category/templates/">Templates</a></li> *@
+                </ul>
+            </div>
+
+            <div class="col-xs-6 col-md-3">
+                <h6>Truy cập nhanh</h6>
+                <ul class="footer-links">
+                    <li><a href="http://scanfcode.com/about/">Giới thiệu</a></li>
+                    <li><a href="http://scanfcode.com/contact/">Liên hệ</a></li>
+                    @* 	<li><a href="http://scanfcode.com/contribute-at-scanfcode/"></a></li>
+                    <li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li> *@
+                    <li><a href="http://scanfcode.com/sitemap/">Chỉ đường</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <p class="copyright-text">
+                    Copyright &copy; 2017 All Rights Reserved by
+                    <a href="#">Khả Khẩu</a>.
+                </p>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <ul class="social-icons">
+                    <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+                    <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+@section Scripts {
+    <script>
+        alert("Shopping Cart!");
+        async function add(productId) {
+            var usernameEl = document.getElementById("username");
+            if (usernameEl == null) {
+                window.location.href = "/Identity/Account/Login";
+                var username = usernameEl.innerText;
+                if (username.length < 1) {
+                    window.location.href = "/Identity/Account/Login";
+                }
+            }
+            try {
+                var response = await fetch(`/Cart/AddItem?productId=${productId}`);
+                if (response.status == 200) {
+                    var result = await response.json();
+                    var cartCountEl = document.getElementById("cartCount");
+                    cartCountEl.innerHTML = result;
+                    window.location.href = "#cartCount";
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+    </script>
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>         

@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewData["Title"] = "Add";
+   
+}
+
+@model KhaKhau.Areas.Admin.Models.Product
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Add Product";
+}
+<h2>Add Product</h2>
+<form asp-action="Add" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+<textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="textdanger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryId">Category</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories"
+                class="form-control"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImageUrl">Product Image</label>
+        <input type="file" id="imageBrowes" asp-for="ImageUrl" class="form-control" />
+    </div>
+    <div class="thumbnail" id="imgPreview" style="background-color:aliceblue;max-width:fit-content">
+        <img  id="targetImg" style="max-width:180px;/>
+        <div class="caption">
+            <a href="#" onclick="clearPreview()">
+				<i class="fas fa-solid fa-trash fa-lg"></i>
+			</a>
+            <span id="description"> </span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    $(document).ready(function () {
+        $("#imageBrowes").change(function () {
+            var File = this.files;
+            if (File && File[0]) {
+                ReadImage(File[0]);
+            }
+
+        })
+        
+    }
+    )
+    var ReadImage = function (file) {
+
+        var reader = new FileReader;
+        var image = new Image;
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+
+            image.src = _file.target.result;
+            image.onload = function () {
+
+                var height = this.height;
+                var width = this.width;
+                var type = file.type;
+                var size = ~~(file.size / 1024) + "KB";
+
+                $("#targetImg").attr('src', _file.target.result);
+                $("#description").text("Size:" + size + ", " + height + "X " + width + ", " + type + "");
+                $("#imgPreview").show();
+
+            }
+
+        }
+
+    }
+        var clearPreview = function () {
+        $("#imageBrowes").val('');
+            $("#description").text('');
+            $("#imgPreview").hide();
+
+        }
+</script>

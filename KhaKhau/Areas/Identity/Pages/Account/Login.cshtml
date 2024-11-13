@@ -1,0 +1,315 @@
+﻿@* @page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = null; 
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<partial name="_HeaderLayout" />
+<div class="row mx-4">
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post">
+                <h2>Use a local account to log in.</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                </div>
+                <div>
+                    <p>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                    </p>
+                    <p>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h3>Use another service to log in.</h3>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
+                                article
+                                about setting up this ASP.NET application to support logging in via external services
+                            </a>.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+ *@
+
+
+ @page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Đăng Nhập";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link href="~/font/fontawesome-free-6.6.0-web/css/all.css" rel="stylesheet" />
+
+<partial name="_HeaderLayout" />
+<body>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="login-box">
+        <form id="account" method="post">
+            <h2 class="text-center">Đăng Nhập</h2>
+            <p class="text-center">Sử dụng tài khoản để đăng nhập</p>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger text-center"></div>
+
+            <!-- Email Input -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" placeholder="Email" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" placeholder="Mật khẩu" type="password" autocomplete="current-password" aria-required="true" />
+                <label asp-for="Input.Password">Mật khẩu</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <!-- Remember Me Checkbox -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="Input.RememberMe" />
+                <label asp-for="Input.RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
+            </div>
+
+            <!-- Login Button -->
+            <button id="login-submit" type="submit" class="w-100 btn btn-primary btn-custom">Đăng Nhập</button>
+
+            <!-- Forgot Password, Register Links -->
+            <div class="text-center mt-3">
+                <a id="forgot-password" asp-page="./ForgotPassword" class="custom-link">Quên mật khẩu?</a>
+            </div>
+            <div class="text-center mt-2">
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="custom-link">Đăng ký tài khoản mới</a>
+            </div>
+            <div class="text-center mt-2">
+                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="custom-link">Gửi lại email xác nhận</a>
+            </div>
+        </form>
+
+        <!-- External Login Options -->
+        <hr />
+        <p class="text-center mt-4">Hoặc đăng nhập bằng:</p>
+        <div class="external-login-buttons d-flex justify-content-center gap-3">
+            <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <button type="submit" name="provider" value="Google" class="btn btn-google">
+                    <i class="fab fa-google"></i> Google
+                </button>
+            </form>
+            <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <button type="submit" name="provider" value="Facebook" class="btn btn-facebook">
+                    <i class="fab fa-facebook-f"></i> Facebook
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+<style>
+    /* Reset mặc định */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body, html {
+        height: 100%;
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .login-box {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 100%;
+    }
+
+    h2 {
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    p {
+        color: #777;
+        font-size: 1rem;
+    }
+
+    /* Form Input Fields */
+    .form-floating input {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 12px 20px;
+        transition: border-color 0.3s ease;
+    }
+
+        .form-floating input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+    .form-floating label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .form-check-label {
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .btn-custom {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        font-size: 1rem;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+    /* External Login Buttons */
+    .external-login-buttons {
+        gap: 15px;
+    }
+
+    .btn-google, .btn-facebook {
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        width: 140px;
+    }
+
+    .btn-google {
+        background-color: #db4437;
+    }
+
+    .btn-facebook {
+        background-color: #3b5998;
+    }
+
+    .btn-google:hover {
+        background-color: #c23321;
+        transform: scale(1.05);
+    }
+
+    .btn-facebook:hover {
+        background-color: #2d4373;
+        transform: scale(1.05);
+    }
+
+    .btn-google i, .btn-facebook i {
+        margin-right: 8px;
+        font-size: 1.2rem;
+    }
+
+    /* Custom Links Styling */
+    .custom-link {
+        color: #007bff;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-block;
+        transition: color 0.3s ease;
+    }
+
+        .custom-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+</style>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+            document.querySelectorAll('.form-floating input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.boxShadow = '0 0 8px rgba(0, 123, 255, 0.4)';
+            });
+            input.addEventListener('blur', function() {
+                this.style.boxShadow = 'none';
+            });
+        });
+    </script>
+}

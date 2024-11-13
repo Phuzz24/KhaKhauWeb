@@ -1,0 +1,98 @@
+﻿@using KhaKhau.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+@inject SignInManager<ApplicationUser> SignInManager
+
+@inject UserManager<ApplicationUser> UserManager
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+      rel="stylesheet" />
+<header>
+
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow pt-xl-3 pb-4">
+        <div class="container">
+            <img class="navbar-brand" id="logo" src="~/images/logo_res.png"/>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+@*             <div id="navbar_item" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            *@            <div id="navbarSupportedContent" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                <ul class="navbar-nav flex-grow-1" id="top_navbar" >
+                  @*   <li class="nav-item">
+                        <a style="display:block" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"> Home</a>
+                    </li> *@
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Menu</a>
+                    </li>  
+                    <li class="nav-item" style="display:inline-block">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            if (User.IsInRole("user"))
+                            {
+                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index" style="white-space:nowrap">Đặt món online</a>
+                            }
+                            else if(User.IsInRole("admin"))
+                            {
+                                <a class="nav-link text-dark" asp-controller="ProductManager" asp-action="Index">Product</a>
+
+                            }
+                        }
+                        else                  //buộc đăng nhập khi đặt món
+
+                        {
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" style="white-space:nowrap">Đặt món online</a>
+
+                        }
+                    </li>
+                    <li class="nav-item">
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            if (User.IsInRole("user"))
+                            {
+
+                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index" style="display:inline-block;white-space:nowrap">Đặt bàn</a>
+                            }
+
+                        }
+                        else
+                        {
+                            //buộc đăng nhập khi đặt bàn
+                            <a style ="display:inline-block;white-space:nowrap" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Dat ban</a>
+
+                        }
+                    </li>
+
+                    <li class="nav-item">
+                        <a style="display:inline-block;white-space:nowrap" class="nav-link text-dark" href="/Home/Index#contact">Liên hệ</a>
+                    </li> 
+                </ul>
+            <partial name="_LoginPartial" class="navbar_login" />
+
+            </div>
+        </div>
+    </nav>
+</header>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script>
+    loadCartCount();
+    async function loadCartCount() {
+        console.log("hi");
+
+        try {
+            var response = await fetch(`/Cart/GetTotalItemInCart`);
+            console.log(response)
+            if (response.status == 200) {
+                var result = await response.json();
+                var cartCountEl = document.getElementById("cartCount");
+                cartCountEl.innerHTML = result;
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+</script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>

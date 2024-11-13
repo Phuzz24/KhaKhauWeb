@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/site.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <partial name="_HeaderLayout" />
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+    <div class="container">
+
+        <div class="signin_signup">
+            <form action="" class="sign_in_form">
+                <h2 class="title">Sign in</h2>
+                <div class="input_field">
+                    <i class="fas fa-user" id="i_input">
+
+                    </i>
+                    <input type="text" placeholder="Username" />
+                </div>
+                <div class="input_field">
+                    <i class="fas fa-lock" id="i_input"></i>
+                    <input type="password" placeholder="Password" />
+                </div>
+                <input type="submit" value="Login" class="btnSignIn" />
+
+                <div class="social-media">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a asp-controller="Login" asp-action="Login" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+
+                </div>
+                <p class="account-text">Don't have an account? <a href="#" id="signup_btn2">Sign up</a></p>
+            </form>
+
+            <form action="" class="sign_up_form">
+                <h2 class="title">Sign up</h2>
+                <div class="input_field">
+                    <i class="fas fa-user" id="i_input">
+
+                    </i>
+                    <input type="text" placeholder="Username" />
+                </div>
+                <div class="input_field">
+                    <i class="fas fa-envelope" id="i_input">
+
+                    </i>
+                    <input type="text" placeholder="Email" />
+                </div>
+                <div class="input_field">
+                    <i class="fas fa-lock" id="i_input"></i>
+                    <input type="password" placeholder="Password" />
+                </div>
+                <input type="submit" value="Sign up" class="btnSignUp" />
+                <div class="social-media">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+
+                </div>
+                <p class="account-text">Already have an account? <a href="#" id="signin_btn2">Sign in</a></p>
+            </form>
+
+        </div>
+        <div class="panels-container">
+            <div class="panel left-panel">
+                <div class="content">
+                    <h3>Đã đăng ký?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus maximus malesuada lacinia. Quisque ipsum ante, rhoncus a consectetur a, lacinia eu ligula.</p>
+                    <button class="btnSignIn" id="signin_btn">Sign in</button>
+
+                </div>
+                <img src="~/images/res_login.jpg" alt="" class="image" />
+            </div>
+            <div class="panel right-panel">
+                <div class="content">
+                    <h3>Chưa đăng ký?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus maximus malesuada lacinia. Quisque ipsum ante, rhoncus a consectetur a, lacinia eu ligula.</p>
+                    <button class="btnSignUp" id="signup_btn">Sign up</button>
+
+                </div>
+                <img src="~/images/res_signup.jpg" alt="" class="image" />
+            </div>
+
+        </div>
+        <script src="~/js/login.js"></script>
+        </div>
+</body>
+</html>
+@await RenderSectionAsync("Scripts", required: false)

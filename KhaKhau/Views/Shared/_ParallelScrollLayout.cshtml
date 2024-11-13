@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+AR:wght@100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+<style>
+body,html {
+  height: 100%;
+  margin:0px;
+        }
+
+.parallax {
+  /* The image used */
+			background-image: url(../images/rectangle_3.png);
+  /* Full height */
+  height: 100%; 
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat ;
+  background-size: cover;
+}
+      
+  
+</style>
+
+</head>
+
+<body>
+@RenderBody()
+
+	@*contact*@
+
+	<section id="contact" >
+	<div class="container w-container" style="padding-top:80px;padding-bottom:80px">
+			<div class="w-layout-grid grid-3-column-1-column-gap-48">
+		<div class="grid-item"><h4>Địa chỉ</h4>
+		<div class="grid-item">
+			<b><small>Cơ sở 1:</small></b>
+			<p>
+				828 Sư Vạn Hạnh, Quận 10
+			</p>
+		</div>
+		<div class="grid-item" >
+			<b><small>Cơ sở 2:</small></b>
+			<p>
+				828 Tân Xuân, Hóc Môn
+			</p>
+ 			</div>
+		</div>
+		
+        <div class="grid-item"><h4>Giờ mở cửa</h4>
+		<div class="grid-item" id="contact_open">
+			<strong>
+				Thứ 2 & Thứ 6
+			</strong>
+			<p>7:00-20:00</p>
+						<img src="~/images/hr_cus.png" width="40px"/>
+						
+					</div>
+		<div class="grid-item" id="contact_open">
+			<strong>
+				Thứ 7 & CN
+			</strong>
+
+			<p>10:00-22:00</p>
+						<img src="~/images/hr_cus.png" width="40px" />
+
+		</div>
+        <div class="grid-item" id="contact_open">
+            <strong>
+                Lễ-Tết
+            </strong>
+            <p>Thông báo sau</p>
+			</div>
+
+		</div>
+      
+
+        <div class="grid-item"><h4>Liên hệ</h4>
+        <div class="grid-item" id="contact_infor">
+<a style="color:chocolate" aria-label="call 213-799-4628 to contact Girl and The Goat Los Angeles" href="tel:+12137994628" class="contact-link w-inline-block"><div id="w-node-eb23069d-155e-2084-5f9f-a267ae0fb468-a8d95533" class="contact-info-text">213-799-4628</div></a>            
+        </div>
+		<div class="grid-item" >
+			<h6>Hoặc qua:</h6>
+		</div>
+        <div class="grid-item d-inline-flex">
+			<h3>
+				<i class="fa fa-envelope" style="background-color:chocolate;border-radius:50%;padding: 10px;
+    color: white;">
+</i>
+				</h3>
+			<h3>
+							<i class="fa fa-brands fa-facebook" style="background-color: chocolate;
+							   border-radius: 50%;
+							   padding: 10px 14px;
+							   color: white;
+							   text-align: center;"></i>
+				</h3>
+        </div>
+		</div>
+		</div>
+		</div>
+        </section>
+
+	<section class="parallax" style="height:400px"></section>
+
+
+	 <section id="about" class="about-section">
+		<div class="container-about w-container">
+			<div class="w-layout-grid about-grid">
+				<div class="about-section-1">
+					<div class="about-image-1">
+						<img style="max-width:100%;display: inline-block;vertical-align:middle"
+						src="~/images/banner_vertical3.jpg" class="about-image" />
+					</div>
+					<div class="about-image-2">
+						<img style="max-width:100%;display:inline-block;vertical-align:middle" src="~/images/banner_vertical2.jpg" class="about-image" />
+					</div>
+				</div>
+				<div class="about-section-2">
+					<h1 class="h2" role="heading" aria-level="2" data-uw-rm-heading="level">Khả Khẩu restaurant</h1>
+					<p class="paragraph margin-20px">
+						Mang trong mình ý nghĩa "ngon miệng" và "khả năng thưởng thức", nhà hàng Khả Khẩu là nơi giao hòa giữa truyền thống và hiện đại. Chúng tôi không chỉ mang đến những món ăn quen thuộc với hương vị đặc trưng mà còn không ngừng sáng tạo, mang đến những trải nghiệm ẩm thực mới mẻ, đáp ứng mọi khẩu vị của thực khách.
+					</p>
+					</div>
+			</div>
+		</div>
+	</section>
+
+
+
+
+
+	<section class="gg-la-happenings-section">
+		<div class="wrapper"><h2 class="section-header _40px-padding">Khả Khẩu có gì?</h2></div>
+		<div class="happening-event">
+			<div class="event-image">
+			<img class="happennings-image" src="https://cdn.prod.website-files.com/64542138e0be122910058cd2/6605c01011e1be98dc02659b_margarita-GGLA.webp" width="625" alt="margarita cocktail" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;" sizes="(max-width: 991px) 94vw, 48vw" data-w-id="3ed1bcb6-8d59-4fda-4d01-680fac982f59" srcset="https://cdn.prod.website-files.com/64542138e0be122910058cd2/6605c01011e1be98dc02659b_margarita-GGLA-p-500.webp 500w, https://cdn.prod.website-files.com/64542138e0be122910058cd2/6605c01011e1be98dc02659b_margarita-GGLA.webp 667w" 
+			data-uw-rm-alt-original="margarita cocktail" data-uw-rm-alt="ALT">
+		</div>
+		<div class="event-info"><div class="sm-align-centre">
+			<h3 class="h2">farmer’s market margarita</h3>
+			<p class="paragraph">Crafted with care, this unique concoction features the earthy notes of celery root, perfectly complemented by a zesty kick of orange masala salt.</p>
+			<a href="#reservation" class="primary-button _28px-margin w-button">reserve</a>
+		</div>
+		</div>
+		</div>
+		</section>
+
+	<section id="reservation" class="reservation-section">
+		<div class="container-small">
+		
+		</div>
+	</section>
+
+	<div class="parallax"></div>
+	@* <div class="contact">
+		<div class="contact-left">
+			<img src="~/images/logo_res.png" />
+			<p>©Copyright 2024 KHAKHAU. All Rights Reserved</p>
+		</div>
+		<div class="contact-right">
+			<h5>CONTACT</h5>
+			<p>Street: D2 street, Ward 25, Binh Thanh District</p>
+			<p>City: Ho Chi Minh</p>
+			<p>State/Province/Area: Ho Chi Minh City</p>
+			<p>Phone number:  (84-8) 3 512 6379/(84-8) 3 804 0955/(84-8) 3 804 0980</p>
+			<p>Email: abcd@email.com</p>
+		</div>
+		
+	</div> *@
+	<footer class="site-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 col-md-6">
+@* 					<h6>About</h6>
+ *@					<img src="/images/logo_res.png"/>
+					<p class="text-justify">
+						Mang trong mình ý nghĩa "ngon miệng" và "khả năng thưởng thức", <i><b>nhà hàng Khả Khẩu</b></i> là nơi giao hòa giữa truyền thống và hiện đại. Chúng tôi không chỉ mang đến những món ăn quen thuộc với hương vị đặc trưng mà còn không ngừng sáng tạo, mang đến những trải nghiệm ẩm thực mới mẻ, đáp ứng mọi khẩu vị của thực khách.
+					</p>
+				</div>
+
+				<div class="col-xs-6 col-md-3">
+					<h6>Dịch vụ</h6>
+					<ul class="footer-links">
+						<li><a href="http://scanfcode.com/category/c-language/">Menu</a></li>
+						<li><a href="http://scanfcode.com/category/front-end-development/">Đặt món online</a></li>
+						@* <li><a href="http://scanfcode.com/category/back-end-development/">Đặt bàn</a></li>
+						<li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
+						<li><a href="http://scanfcode.com/category/android/">Android</a></li>
+						<li><a href="http://scanfcode.com/category/templates/">Templates</a></li> *@
+					</ul>
+				</div>
+
+				<div class="col-xs-6 col-md-3">
+					<h6>Truy cập nhanh</h6>
+					<ul class="footer-links">
+						<li><a href="http://scanfcode.com/about/">Giới thiệu</a></li>
+						<li><a href="http://scanfcode.com/contact/">Liên hệ</a></li>
+					@* 	<li><a href="http://scanfcode.com/contribute-at-scanfcode/"></a></li>
+						<li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li> *@
+						<li><a href="http://scanfcode.com/sitemap/">Chỉ đường</a></li>
+					</ul>
+				</div>
+			</div>
+			<hr>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-sm-6 col-xs-12">
+					<p class="copyright-text">
+						Copyright &copy; 2017 All Rights Reserved by
+						<a href="#">Khả Khẩu</a>.
+					</p>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<ul class="social-icons">
+						<li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+						<li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+						<li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+						<li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+</body>
+</html>
+<style type="text/css" media="screen and (min-width:1366px)">
+    .parallax {
+        background-attachment: scroll;
+    }
+
+</style>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+
+@await RenderSectionAsync("Scripts", required: false)
