@@ -146,6 +146,7 @@ p {
     z-index: 2; /* Đặt form trên nền */
     width: 100%;
     max-width: 400px;
+    margin-bottom:30px;
 }
 
 /* Form đăng nhập */

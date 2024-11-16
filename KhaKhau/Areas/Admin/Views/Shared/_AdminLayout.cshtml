@@ -1,4 +1,4 @@
-﻿@using KhaKhau.Areas.Identity.Data;
+﻿﻿@using KhaKhau.Areas.Identity.Data;
 @inject SignInManager<ApplicationUser> SignInManager
 
 @inject UserManager<ApplicationUser> UserManager
@@ -18,12 +18,12 @@
     <link href="~/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
-        @*   tu them *@
+    @*   tu them *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
-     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-     <!-- Custom styles for this template-->
+    <!-- Custom styles for this template-->
     <link href="~/admin/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
@@ -39,7 +39,6 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-area="Admin" asp-controller="ProductManager" asp-action="Index">
                 <div class="sidebar-brand-icon">
-                   
                 </div>
                 <div class="sidebar-brand-text mx-3">K<sup>2</sup>ADMIN</div>
             </a>
@@ -73,7 +72,7 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Quản lý đặt bàn:</h6>
-						<a class="collapse-item" href="#">Bàn trống </a>
+                        <a class="collapse-item" href="#">Bàn trống </a>
                         <a class="collapse-item" href="#">Xác nhận</a>
                         <a class="collapse-item" href="#">Danh sách</a>
                     </div>
@@ -85,7 +84,8 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                    aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-solid fa-users"></i>
-                    <span>Menu
+                    <span>
+                        Menu
                     </span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
@@ -97,33 +97,32 @@
                         <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Update">Sửa</a>
                     </div>
                 </div>
-            </li>     
+            </li>
             <!-- Nav Item - Utilities Collapse Menu -->
-        
-               @*  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                   aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-solid fa-users"></i>
-                    <span> Xác nhận đơn hàng
-                    </span>
-                </a> *@
-         
-              
-               @*  <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Quản lý menu:</h6>
-                        <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Add">Thêm</a>
-                        <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Add">Xóa</a>
-                        <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Update">Sửa</a>
-                    </div>
-                </div> *@
+            @*  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-solid fa-users"></i>
+            <span> Xác nhận đơn hàng
+            </span>
+            </a> *@
+
+
+            @*  <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Quản lý menu:</h6>
+            <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Add">Thêm</a>
+            <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Add">Xóa</a>
+            <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Update">Sửa</a>
+            </div>
+            </div> *@
             <li class="nav-item">
                 <a class="nav-link" asp-area="admin" asp-controller="OrderManager" asp-action="AllOrders">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Xác nhận đơn hàng</span>
                 </a>
 
-            </li>   
+            </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="admin" asp-controller="Stock" asp-action="Index">
                     <i class="fas fa-fw fa-chart-area"></i>
@@ -134,8 +133,9 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-@*             <!-- Heading -->
- *@            <div class="sidebar-heading">
+            @*             <!-- Heading -->
+            *@
+            <div class="sidebar-heading">
                 Other
             </div>
 
@@ -150,39 +150,43 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Quản lý nhân viên:</h6>
                         <a class="collapse-item" asp-area="Admin" asp-controller="UserManager" asp-action="Index">Thêm</a>
-                        <a class="collapse-item" href="register.html">Xóa
+                        <a class="collapse-item" href="register.html">
+                            Xóa
                         </a>
-                        <a class="collapse-item" href="forgot-password.html">Sửa
+                        <a class="collapse-item" href="forgot-password.html">
+                            Sửa
                         </a>
-                    
+
                     </div>
                 </div>
             </li>
 
-@*             <!-- Nav Item - Charts -->
- *@            <li class="nav-item">
+            @*             <!-- Nav Item - Charts -->
+            *@
+            <li class="nav-item">
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Other</span>
                 </a>
             </li>
 
-        
 
-@*             <!-- Divider -->
- *@            <hr class="sidebar-divider d-none d-md-block">
 
-@*             <!-- Sidebar Toggler (Sidebar) -->
- *@            <div class="text-center d-none d-md-inline">
+            @*             <!-- Divider -->
+            *@
+            <hr class="sidebar-divider d-none d-md-block">
+
+            @*             <!-- Sidebar Toggler (Sidebar) -->
+            *@
+            <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-          
-        
+
+
 
         </ul>
-         <!-- End of Sidebar -->
- 
+        <!-- End of Sidebar -->
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -400,18 +404,18 @@
                 </nav>
 
                 <div class="container">
-@*                     thong bao khi update quantity- stocks
- *@                    <partial name="_Notifications"/>
+                    @*                     thong bao khi update quantity- stocks
+                    *@                    <partial name="_Notifications" />
                     @RenderBody()
                 </div>
-                </div>
-
-               
+            </div>
 
 
-                 
-         </div>
-         </div>
+
+
+
+        </div>
+    </div>
     <!-- Bootstrap core JavaScript-->
     <script src="~/admin/avendor/jquery/jquery.min.js"></script>
     <script src="~/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

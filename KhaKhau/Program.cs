@@ -84,18 +84,19 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    // Map Razor Pages (bao gồm các trang Identity) đầu tiên
-    endpoints.MapRazorPages();
-
-    // Định tuyến mặc định cho các controller của MVC
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-
-    // Cấu hình định tuyến cho các area
     endpoints.MapControllerRoute(
         name: "areas",
         pattern: "{area:exists}/{controller=ProductManager}/{action=Index}/{id?}");
 });
+// Map Razor Pages (bao gồm các trang Identity) đầu tiên
+app.MapRazorPages();
+
+// Định tuyến mặc định cho các controller của MVC
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Cấu hình định tuyến cho các area
+
 
 app.Run();
