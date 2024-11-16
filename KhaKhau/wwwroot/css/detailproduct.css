@@ -1,50 +1,200 @@
-﻿body {
-    background-color: #edf1f5;
+﻿/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto, sans-serif;
 }
 
+body {
+    background-color: #f3f4f6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 50px auto;
+}
+
+/* Card hiển thị sản phẩm */
 .card {
-    margin-bottom: 30px;
+    border: none;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 0 solid transparent;
-    border-radius: 0;
+.card-body {
+    padding: 2rem;
 }
 
-    .card .card-subtitle {
-        font-weight: 300;
-        margin-bottom: 10px;
-        color: #8898aa;
+/* Hình ảnh sản phẩm */
+.img_display {
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .img_display:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
     }
 
-.table-product.table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f3f8fa !important
+/* Tiêu đề sản phẩm */
+.card-title {
+    font-size: 2.5rem;
+    color: #C5705D;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
 }
 
-.table-product td {
-    border-top: 0px solid #dee2e6 !important;
-    color: #728299 !important;
+/* Đường dẫn điều hướng */
+p a {
+    font-size: 0.9rem;
+    color: #C5705D;
+    font-weight: 500;
 }
+
+    p a:hover {
+        color: #D0B8A8;
+        text-decoration: underline;
+    }
+
+/* Mô tả sản phẩm */
+.box-title {
+    font-size: 1.2rem;
+    color: #D0B8A8;
+    margin-top: 20px;
+}
+
+.card-body p {
+    font-size: 1rem;
+    color: #4A4947;
+    line-height: 1.6;
+}
+
+/* Giá sản phẩm */
+h2 {
+    font-size: 2rem;
+    color: #D0B8A8;
+    font-weight: bold;
+}
+
+    h2 sup small {
+        background-color: #C5705D;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 0.8rem;
+    }
+
+/* Nút Thêm vào giỏ hàng và Mua ngay */
+.button,
 #btn_css {
-    background-color: #4A4947; /* Green */
-    color: white;
-    border-radius:10px;
-    padding: 15px 32px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-
+    background-color: #C5705D;
+    color: #fff;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
 }
-/*@media screen and (max-width: 576px) {
-    .img_display{
-        width:50%;
-        object-fit:cover;
+
+    .button:hover,
+    #btn_css:hover {
+        background-color: #D0B8A8;
+        transform: scale(1.05);
     }
-}*/
+
+    .button i,
+    #btn_css i {
+        margin-right: 5px;
+    }
+
+/* Hiệu ứng các thành phần khi cuộn */
+[data-aos] {
+    opacity: 0;
+    transition-property: transform, opacity;
+    transition-duration: 0.4s;
+}
+
+[data-aos="fade-up"] {
+    transform: translateY(20px);
+}
+
+[data-aos].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive cho máy tính bảng và điện thoại di động */
+@media (max-width: 991px) {
+    /* Điều chỉnh chiều rộng của hình ảnh sản phẩm */
+    .img_display {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Giảm kích thước tiêu đề sản phẩm */
+    .card-title {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    /* Căn giữa các nút Thêm vào giỏ và Mua ngay */
+    .justify-content-lg-end {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    /* Mô tả và giá sản phẩm căn giữa */
+    .card-body {
+        text-align: center;
+    }
+
+        /* Ẩn bớt khoảng trống trong card */
+        .card-body p {
+            font-size: 0.9rem;
+        }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 767px) {
+    /* Điều chỉnh bố cục hàng ngang thành cột dọc */
+    .row {
+        flex-direction: column;
+    }
+
+    /* Đặt hình ảnh lên trên phần mô tả sản phẩm */
+    .col-lg-5, .col-lg-7 {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Thu nhỏ kích thước chữ của tiêu đề và mô tả */
+    .card-title {
+        font-size: 1.8rem;
+    }
+
+    .card-body p {
+        font-size: 0.85rem;
+    }
+
+    /* Căn giữa giá sản phẩm */
+    h2 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    /* Điều chỉnh các nút */
+    .button, #btn_css {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+}

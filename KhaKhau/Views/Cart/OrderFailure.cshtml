@@ -1,21 +1,61 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
 <!DOCTYPE html>
- 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
     <title>Order Failure</title>
 </head>
 <body>
-    <h3>Đặt hàng không thành công</h3>
+    <div class="container failure-container mt-5 d-flex justify-content-center align-items-center">
+        <div class="card p-5 text-center">
+            <div class="mb-4">
+                <i class="fas fa-times-circle text-danger" style="font-size: 60px;"></i>
+            </div>
+            <h2 class="text-danger mb-3">Đặt hàng không thành công!</h2>
+            <p>Rất tiếc, đơn hàng của bạn đã không thể hoàn thành.</p>
+            <p>Vui lòng kiểm tra lại thông tin hoặc thử lại sau.</p>
+            <hr />
+            <div class="btn-group">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Về Trang Chủ
+                </a>
+                <a href="/Cart/GetUserCart" class="btn btn-warning">
+                    <i class="fas fa-undo"></i> Thử Lại Đặt Hàng
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .failure-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            max-width: 500px;
+            border: none;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .text-danger {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .btn-group .btn {
+            margin: 10px 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
 </body>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 </html>

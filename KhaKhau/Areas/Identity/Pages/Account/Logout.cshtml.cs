@@ -29,30 +29,22 @@ namespace KhaKhau.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnGet()
         {
             await _signInManager.SignOutAsync();
-            return LocalRedirect("/");
-        } 
+            _logger.LogInformation("Bạn đã đăng xuất thành công.");
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        }
+
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
-            return LocalRedirect("/");
-
-            //_logger.LogInformation("User logged out.");
-            //if (returnUrl != null)
-            //{
-            //    return LocalRedirect(returnUrl);
-            //}
-            //else
-            //{
-            //    // This needs to be a redirect so that the browser performs a new
-            //    // request and the identity for the user gets updated.
-            //    return RedirectToPage();
-            //}
+            _logger.LogInformation("Bạn đã đăng xuất thành công.");
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
         }
 
 
 
 
 
+
     }
-    
+
 }

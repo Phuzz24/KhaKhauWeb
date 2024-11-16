@@ -1,0 +1,238 @@
+﻿@{
+    ViewData["Title"] = "Giới thiệu";
+    Layout = null;
+}
+<link rel="stylesheet" href="~/css/gioithieu.css" />
+<partial name="_HeaderLayout" />
+<link rel="stylesheet" href="~/css/home.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<header class="hero-section">
+    <div class="overlay"></div>
+    <div class="hero-content animate__animated animate__fadeIn">
+        <h1 class="hero-title">Chào mừng đến với Nhà Hàng Khả Khẩu</h1>
+        <p class="hero-subtitle">Nơi hương vị và cảm xúc hòa quyện</p>
+        <a href="/Home/DatBan" class="cta-button">Đặt bàn ngay</a>
+    </div>
+</header>
+
+<!-- Giới thiệu tổng quan -->
+<section class="about-section">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2 class="section-title">Về Chúng Tôi</h2>
+                <div class="underline"></div>
+                <p>
+                    Nhà hàng <strong>Khả Khẩu</strong> được thành lập với niềm đam mê mang đến cho thực khách những trải nghiệm ẩm thực độc đáo.
+                    Chúng tôi tự hào về sự kết hợp tinh tế giữa các món ăn truyền thống và hiện đại, cùng với không gian ấm cúng và phục vụ chuyên nghiệp.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="/images/restaurant.jpg" alt="Nhà hàng Khả Khẩu" class="fade-in">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Các giá trị cốt lõi -->
+<section class="values-section">
+    <div class="container">
+        <h2 class="section-title text-center">Giá Trị Cốt Lõi</h2>
+        <div class="underline center"></div>
+        <div class="values-grid">
+            <div class="value-item">
+                <i class="fas fa-heart"></i>
+                <h3>Tận Tâm</h3>
+                <p>Phục vụ với cả trái tim và sự chuyên nghiệp</p>
+            </div>
+            <div class="value-item">
+                <i class="fas fa-star"></i>
+                <h3>Chất Lượng</h3>
+                <p>Cam kết nguyên liệu tươi ngon nhất</p>
+            </div>
+            <div class="value-item">
+                <i class="fas fa-users"></i>
+                <h3>Khách Hàng</h3>
+                <p>Đặt trải nghiệm khách hàng lên hàng đầu</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Đội ngũ Đầu bếp -->
+<section class="chefs-section">
+    <h2 class="section-title">Đội ngũ Đầu bếp</h2>
+    <div class="underline center"></div>
+
+    <div class="slideshow-container">
+        <div class="slide-wrapper">
+            <div class="slide-content" id="chefs-content">
+                <div class="chef-card">
+                    <img src="/images/chef6.jpg" alt="Đầu bếp Alex" class="chef-image" />
+                    <div class="chef-info">
+                        <h3>Đầu bếp Alex</h3>
+                        <p>Chuyên về ẩm thực Pháp</p>
+                    </div>
+                </div>
+                <div class="chef-card">
+                    <img src="/images/chef2.jpg" alt="Đầu bếp Maria" class="chef-image" />
+                    <div class="chef-info">
+                        <h3>Đầu bếp Maria</h3>
+                        <p>Chuyên về ẩm thực Ý</p>
+                    </div>
+                </div>
+                <div class="chef-card">
+                    <img src="/images/chef3.jpg" alt="Đầu bếp Hiro" class="chef-image" />
+                    <div class="chef-info">
+                        <h3>Đầu bếp Hiro</h3>
+                        <p>Chuyên về ẩm thực Nhật</p>
+                    </div>
+                </div>
+                <div class="chef-card">
+                    <img src="/images/chef4.jpg" alt="Đầu bếp David" class="chef-image" />
+                    <div class="chef-info">
+                        <h3>Đầu bếp David</h3>
+                        <p>Chuyên về ẩm thực Mỹ</p>
+                    </div>
+                </div>
+                <div class="chef-card">
+                    <img src="/images/chef5.jpg" alt="Đầu bếp Ming" class="chef-image" />
+                    <div class="chef-info">
+                        <h3>Đầu bếp Ming</h3>
+                        <p>Chuyên về ẩm thực Trung Hoa</p>
+                    </div>
+                </div>
+                <div class="chef-card">
+                    <img src="/images/chef2.jpg" alt="Đầu bếp Jean" class="chef-image" />
+                    <div class="chef-info">
+                        <h3>Đầu bếp Jean</h3>
+                        <p>Chuyên về bánh ngọt</p>
+                    </div>
+                </div>
+                <div class="chef-card">
+                    <img src="/images/chef7.jpg" alt="Đầu bếp Jean" class="chef-image" />
+                    <div class="chef-info">
+                        <h3>Đầu bếp Jean</h3>
+                        <p>Chuyên về bánh ngọt</p>
+                    </div>
+                </div>
+                @* <div class="chef-card">
+                <img src="/images/chef8.jpg" alt="Đầu bếp Jean" class="chef-image" />
+                <div class="chef-info">
+                <h3>Đầu bếp Jean</h3>
+                <p>Chuyên về bánh ngọt</p>
+                </div>
+                </div> *@
+            </div>
+        </div>
+        <div class="control-buttons">
+            <button class="control-btn" onclick="moveSlide('chefs', -1)">&#10094;</button>
+            <button class="control-btn" onclick="moveSlide('chefs', 1)">&#10095;</button>
+        </div>
+    </div>
+</section>
+
+<!-- Thành tựu -->
+<section class="achievements-section">
+    <div class="container">
+        <div class="achievements-grid">
+            <div class="achievement-item">
+                <span class="number" data-count="15">0</span>
+                <p>Năm kinh nghiệm</p>
+            </div>
+            <div class="achievement-item">
+                <span class="number" data-count="1000">0</span>
+                <p>Khách hàng hài lòng</p>
+            </div>
+            <div class="achievement-item">
+                <span class="number" data-count="50">0</span>
+                <p>Món ăn đặc biệt</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="contact">
+    <div class="container">
+        <div class="footer-content">
+            <div class="contact-left">
+                <img src="/images/logo_res.png" alt="Logo Khả Khẩu" />
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+                <p class="copyright">©Copyright 2024 KHAKHAU. All Rights Reserved</p>
+            </div>
+            <div class="contact-right">
+                <h2>Liên Hệ</h2>
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>D2 street, Ward 25, Binh Thanh District, Ho Chi Minh City</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <p>(84-8) 3 512 6379</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>abcd@email.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    let currentPosition = { chefs: 0 };
+    const itemsPerSlide = 4; // Chỉ hiện 4 đầu bếp tại một thời điểm
+
+    function moveSlide(section, direction) {
+        const content = document.getElementById(`${section}-content`);
+        const items = content.children;
+        const totalItems = items.length;
+        const maxPosition = Math.ceil(totalItems / itemsPerSlide) - 1;
+
+        currentPosition[section] += direction;
+
+        if (currentPosition[section] < 0) {
+            currentPosition[section] = 0;
+        } else if (currentPosition[section] > maxPosition) {
+            currentPosition[section] = maxPosition;
+        }
+
+        const translateX = -(currentPosition[section] * (100 / itemsPerSlide));
+        content.style.transform = `translateX(${translateX}%)`;
+    }
+
+    function autoSlide() {
+        moveSlide('chefs', 1);
+    }
+
+    // Tự động chuyển slide sau mỗi 5 giây
+    setInterval(autoSlide, 5000);
+
+    // Khởi tạo ban đầu
+    window.onload = function () {
+        document.querySelectorAll('.slide-content').forEach(content => {
+            content.style.transform = 'translateX(0%)';
+        });
+    };
+    document.querySelectorAll('.achievement-item .number').forEach(item => {
+        const count = parseInt(item.getAttribute('data-count'));
+        let currentCount = 0;
+        const increment = Math.ceil(count / 100); // Tăng dần số từ 0 đến count
+
+        const updateCount = setInterval(() => {
+            currentCount += increment;
+            if (currentCount >= count) {
+                currentCount = count;
+                clearInterval(updateCount);
+            }
+            item.textContent = currentCount;
+        }, 50); // Thay đổi tốc độ đếm nếu cần
+    });
+</script>

@@ -1,0 +1,195 @@
+﻿
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Roboto, sans-serif;
+}
+
+.container {
+    max-width: 100%;
+}
+
+.login-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+}
+
+h2 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+p {
+    color: #777;
+    font-size: 1rem;
+}
+
+/* Form Input Fields */
+.form-floating input {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 12px 20px;
+    transition: border-color 0.3s ease;
+}
+
+    .form-floating input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+
+.form-floating label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.form-check-label {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+    .btn-custom:hover {
+        background-color: #0056b3;
+        transform: scale(1.02);
+    }
+
+/* External Login Buttons */
+.external-login-buttons {
+    gap: 15px;
+}
+
+.btn-google, .btn-facebook {
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 140px;
+}
+
+.btn-google {
+    background-color: #db4437;
+}
+
+.btn-facebook {
+    background-color: #3b5998;
+}
+
+.btn-google:hover {
+    background-color: #c23321;
+    transform: scale(1.05);
+}
+
+.btn-facebook:hover {
+    background-color: #2d4373;
+    transform: scale(1.05);
+}
+
+.btn-google i, .btn-facebook i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+/* Custom Links Styling */
+.custom-link {
+    color: #007bff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+    .custom-link:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+/* GIF nền */
+.background-gif {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1; /* Nền nằm phía sau */
+}
+
+    .background-gif img {
+    }
+
+
+/* Container cho form đăng nhập */
+.login-box-container {
+    z-index: 2; /* Đặt form trên nền */
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Form đăng nhập */
+.login-box {
+    background: rgba(255, 255, 255, 0.85); /* Nền trắng mờ để nổi bật form */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+    .login-box h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+.btn-custom {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.external-login-buttons .btn {
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.external-login-buttons .btn-google {
+    background-color: #db4437;
+    color: #fff;
+}
+
+.external-login-buttons .btn-facebook {
+    background-color: #3b5998;
+    color: #fff;
+}
+
+.background-gif img {
+    object-fit: cover; /* Đảm bảo GIF vừa toàn bộ màn hình */
+    width: 100%;
+    height: 100%;
+    border-radius: 0; /* Bo góc sát trình duyệt */
+}
+
+.background-gif img {
+    filter: blur(5px); /* Hiệu ứng mờ */
+    opacity: 0.8; /* Giảm độ sáng */
+}

@@ -1,98 +1,108 @@
 ﻿@using KhaKhau.Areas.Identity.Data;
 @using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 @inject SignInManager<ApplicationUser> SignInManager
-
 @inject UserManager<ApplicationUser> UserManager
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-      rel="stylesheet" />
-<header>
 
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow pt-xl-3 pb-4">
-        <div class="container">
-            <img class="navbar-brand" id="logo" src="~/images/logo_res.png"/>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-@*             <div id="navbar_item" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-            *@            <div id="navbarSupportedContent" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+<link href="~/font/fontawesome-free-6.6.0-web/css/all.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/header.css" />
 
-                <ul class="navbar-nav flex-grow-1" id="top_navbar" >
-                  @*   <li class="nav-item">
-                        <a style="display:block" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"> Home</a>
-                    </li> *@
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Menu</a>
-                    </li>  
-                    <li class="nav-item" style="display:inline-block">
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            if (User.IsInRole("user"))
-                            {
-                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index" style="white-space:nowrap">Đặt món online</a>
-                            }
-                            else if(User.IsInRole("admin"))
-                            {
-                                <a class="nav-link text-dark" asp-controller="ProductManager" asp-action="Index">Product</a>
+<div class="header">
+    <div class="logo-container">
+        <img class="navbar-brand" src="~/images/logo_res.png" alt="Logo" />
+    </div>
+    
+    <div class="menu-container">
+        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">TRANG CHỦ</a>
+        
+        <!-- Kiểm tra nếu đã đăng nhập và có vai trò user hoặc admin -->
+        @if (SignInManager.IsSignedIn(User))
+        {
+            @if (User.IsInRole("user"))
+            {
+                <a class="nav-link" asp-controller="Product" asp-action="Index">ĐẶT MÓN ONLINE</a>
+                <a class="nav-link" asp-controller="Home" asp-action="DatBan">ĐẶT BÀN</a>
+            }
+          
+        }
+        else
+        {
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">ĐẶT MÓN ONLINE</a>
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">ĐẶT BÀN</a>
+        }
+        
+        <a class="nav-link" href="/Home/GioiThieu">GIỚI THIỆU</a>
+    </div>
 
-                            }
-                        }
-                        else                  //buộc đăng nhập khi đặt món
 
-                        {
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" style="white-space:nowrap">Đặt món online</a>
-
-                        }
-                    </li>
-                    <li class="nav-item">
-
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            if (User.IsInRole("user"))
-                            {
-
-                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index" style="display:inline-block;white-space:nowrap">Đặt bàn</a>
-                            }
-
-                        }
-                        else
-                        {
-                            //buộc đăng nhập khi đặt bàn
-                            <a style ="display:inline-block;white-space:nowrap" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Dat ban</a>
-
-                        }
-                    </li>
-
-                    <li class="nav-item">
-                        <a style="display:inline-block;white-space:nowrap" class="nav-link text-dark" href="/Home/Index#contact">Liên hệ</a>
-                    </li> 
-                </ul>
-            <partial name="_LoginPartial" class="navbar_login" />
-
+    <div class="auth-container">
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("user"))
+        {
+            <div class="dropdown">
+                <a href="#" class="nav-link dropdown-toggle" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i> @UserManager.GetUserName(User)
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" asp-controller="Account" asp-action="EditInfo">Xem thông tin cá nhân</a>
+                    <a class="dropdown-item" asp-controller="Order" asp-action="OrderHistory">Xem lịch sử đơn hàng</a>
+                    <form id="logoutForm" method="post" asp-area="Identity" asp-page="/Account/Logout">
+                        <button type="submit" class="btn btn-link dropdown-item" style="padding: 0; color: inherit; text-decoration: none;">
+                            Đăng Xuất
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-<script>
-    loadCartCount();
-    async function loadCartCount() {
-        console.log("hi");
+        }
+        else if(User.IsInRole("admin"))
+        {
+            <div class="dropdown">
+                <a href="#" class="nav-link dropdown-toggle" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i> @UserManager.GetUserName(User)
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" asp-controller="ProductManager" asp-action="Display">Quản lí</a>
+                    <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Đăng Xuất</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <a href="~/Identity/Account/Login" class="nav-link"><i class="fa-solid fa-user"></i> ĐĂNG NHẬP</a>
+            <a href="~/Identity/Account/Register" class="nav-link"><i class="fa-solid fa-user-plus"></i> ĐĂNG KÝ</a>
+        }
+    </div>
+    
+    <div class="iconz">
+        <a href="/Cart/GetUserCart">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cartCount" class="badge badge-pill badge-primary">0</span> <!-- Hiển thị số lượng sản phẩm trong giỏ -->
+        </a>
+    </div>
+</div>
 
-        try {
-            var response = await fetch(`/Cart/GetTotalItemInCart`);
-            console.log(response)
-            if (response.status == 200) {
-                var result = await response.json();
-                var cartCountEl = document.getElementById("cartCount");
-                cartCountEl.innerHTML = result;
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const menuToggle = document.querySelector(".navbar-toggler");
+        const menuContainer = document.querySelector(".menu-container");
+
+        menuToggle.addEventListener("click", function () {
+            menuContainer.classList.toggle("active");
+        });
+
+        loadCartCount();
+
+        async function loadCartCount() {
+            try {
+                var response = await fetch(`/Cart/GetTotalItemInCart`);
+                if (response.status == 200) {
+                    var result = await response.json();
+                    var cartCountEl = document.getElementById("cartCount");
+                    cartCountEl.innerHTML = result;
+                }
+            } catch (err) {
+                console.log(err);
             }
         }
-        catch (err) {
-            console.log(err);
-        }
-    }
+    });
 </script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+
+               

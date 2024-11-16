@@ -5,18 +5,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KhaKhau.Repositories
 {
-	public class CartRepository : ICartRepository
-	{
+    public class CartRepository : ICartRepository
+    {
         private readonly KhaKhauContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<CartRepository> _logger; // Thêm ILogger
+
 
         public CartRepository(KhaKhauContext context, IHttpContextAccessor httpContextAccessor,
-            UserManager<ApplicationUser> userManager)
+       UserManager<ApplicationUser> userManager, ILogger<CartRepository> logger)
         {
             _context = context;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger; // Khởi tạo ILogger
+
+
         }
         public async Task<int> AddItem(int productId, int qty)
         {
@@ -86,32 +91,39 @@ namespace KhaKhau.Repositories
                     _context.CartDetails.Remove(cartItem);
                 else
                     cartItem.Quantity = cartItem.Quantity - 1;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-
+                _logger.LogError("Failed to remove item from cart: {Message}", ex.Message);
+                throw;
             }
-            var cartItemCount = await GetCartItemCount(userId);
-            return cartItemCount;
+            return await GetCartItemCount(userId);
         }
 
         public async Task<ShoppingCart> GetUserCart()
         {
             var userId = GetUserId();
             if (userId == null)
-                throw new InvalidOperationException("Invalid userid");
-            var shoppingCart = await _context.ShoppingCarts
-                                  .Include(a => a.CartDetails)
-                                  .ThenInclude(a => a.Product)
-                                  .ThenInclude(a => a.Stock)
-                                  .Include(a => a.CartDetails)
-                                  .ThenInclude(a => a.Product)
-                                  .ThenInclude(a => a.Category)
-                                  .Where(a => a.UserId == userId).FirstOrDefaultAsync();
-            return shoppingCart;
+            {
+                // Trả về null hoặc một giỏ hàng trống nếu người dùng chưa đăng nhập
+                _logger.LogWarning("User is not logged in, cannot retrieve shopping cart.");
+                return null;
+            }
 
+            var shoppingCart = await _context.ShoppingCarts
+                .Include(a => a.CartDetails)
+                .ThenInclude(a => a.Product)
+                .ThenInclude(a => a.Stock)
+                .Include(a => a.CartDetails)
+                .ThenInclude(a => a.Product)
+                .ThenInclude(a => a.Category)
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            return shoppingCart;
         }
+
+
         public async Task<ShoppingCart> GetCart(string userId)
         {
             var cart = await _context.ShoppingCarts.FirstOrDefaultAsync(x => x.UserId == userId);
@@ -138,21 +150,36 @@ namespace KhaKhau.Repositories
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                // logic
-                // move data from cartDetail to order and order detail then we will remove cart detail
+                _logger.LogInformation("Bắt đầu đặt hàng cho người dùng.");
                 var userId = GetUserId();
+
                 if (string.IsNullOrEmpty(userId))
-                    throw new UnauthorizedAccessException("User is not logged-in");
+                {
+                    _logger.LogError("Người dùng chưa đăng nhập.");
+                    throw new UnauthorizedAccessException("Người dùng chưa đăng nhập");
+                }
+
                 var cart = await GetCart(userId);
-                if (cart is null)
-                    throw new InvalidOperationException("Invalid cart");
-                var cartDetail = _context.CartDetails
-                                    .Where(a => a.ShoppingCartId == cart.Id).ToList();
-                if (cartDetail.Count == 0)
-                    throw new InvalidOperationException("Cart is empty");
+                if (cart == null)
+                {
+                    _logger.LogError("Giỏ hàng không hợp lệ cho user ID: {UserId}", userId);
+                    throw new InvalidOperationException("Giỏ hàng của bạn trống hoặc không hợp lệ.");
+                }
+
+                var cartDetails = _context.CartDetails.Where(cd => cd.ShoppingCartId == cart.Id).ToList();
+                if (cartDetails.Count == 0)
+                {
+                    _logger.LogError("Giỏ hàng trống cho user ID: {UserId}", userId);
+                    throw new InvalidOperationException("Giỏ hàng của bạn trống.");
+                }
+
                 var choXacNhanStatus = _context.OrderStatuses.FirstOrDefault(s => s.StatusName == "choxacnhan");
-                if (choXacNhanStatus is null)
-                    throw new InvalidOperationException("Đơn hàng chưa được đặt");
+                if (choXacNhanStatus == null)
+                {
+                    _logger.LogError("Trạng thái đơn hàng 'choxacnhan' không được tìm thấy.");
+                    throw new InvalidOperationException("Trạng thái đơn hàng 'choxacnhan' chưa được thiết lập trong hệ thống.");
+                }
+
                 var order = new Order
                 {
                     UserId = userId,
@@ -161,15 +188,30 @@ namespace KhaKhau.Repositories
                     Email = model.Email,
                     MobileNumber = model.MobileNumber,
                     PaymentMethod = model.PaymentMethod,
-                    Address = model.Address,
+                    Address = model.Address, // Đã ghép nối FullAddress trong controller
                     IsPaid = false,
-                    OrderStatusId = choXacNhanStatus.Id // cho admin xac nhan 
-                    
+                    OrderStatusId = choXacNhanStatus.Id
                 };
+
                 _context.Orders.Add(order);
-                _context.SaveChanges();
-                foreach (var item in cartDetail)
+                await _context.SaveChangesAsync();
+
+                foreach (var item in cartDetails)
                 {
+                    var product = await _context.Products.FindAsync(item.ProductId);
+                    if (product == null)
+                    {
+                        _logger.LogError("Sản phẩm với ID {ProductId} không tồn tại.", item.ProductId);
+                        throw new InvalidOperationException($"Sản phẩm {item.ProductId} không tồn tại.");
+                    }
+
+                    var stock = await _context.Stocks.FirstOrDefaultAsync(a => a.Productid == item.ProductId);
+                    if (stock == null || item.Quantity > stock.Quantity)
+                    {
+                        _logger.LogError("Không đủ hàng cho sản phẩm ID {ProductId}.", item.ProductId);
+                        throw new InvalidOperationException($"Không đủ hàng cho {product.Name}");
+                    }
+
                     var orderDetail = new OrderDetail
                     {
                         ProductId = item.ProductId,
@@ -178,44 +220,103 @@ namespace KhaKhau.Repositories
                         UnitPrice = item.UnitPrice
                     };
                     _context.OrderDetails.Add(orderDetail);
-
-                    //// update stock here
-
-                    var stock = await _context.Stocks.FirstOrDefaultAsync(a => a.Productid == item.ProductId);
-                    if (stock == null)
-                    {
-                        throw new InvalidOperationException("Hết hàng");
-                    }
-
-                    if (item.Quantity > stock.Quantity)
-                    {
-                        throw new InvalidOperationException($"Chỉ còn {stock.Quantity} món");
-                    }
-                    // decrease the number of quantity from the stock table
                     stock.Quantity -= item.Quantity;
                 }
 
-                // removing the cartdetails
-                _context.CartDetails.RemoveRange(cartDetail);
-                _context.SaveChanges();
-                transaction.Commit();
+                _context.CartDetails.RemoveRange(cartDetails);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("Đặt hàng thành công cho Order ID: {OrderId}", order.Id);
                 return true;
             }
             catch (Exception ex)
             {
-
-                return false;
+                await transaction.RollbackAsync();
+                _logger.LogError("Đặt hàng thất bại: {Message}", ex.Message);
+                throw new InvalidOperationException("Đặt hàng thất bại: " + ex.Message);
             }
         }
 
-        private string GetUserId()
+        // CartRepository.cs
+        public async Task<List<Product>> GetTopSellingProductsAsync(int minSales = 5)
+        {
+            var topSellingProducts = await _context.OrderDetails
+                .Where(od => od.Order != null) // Đảm bảo chỉ lấy các sản phẩm có đơn hàng
+                .GroupBy(od => od.ProductId)
+                .Where(g => g.Sum(od => od.Quantity) >= minSales)  // Chỉ chọn các sản phẩm có tổng số lượng bán >= 5
+                .Select(g => g.Key) // Lấy ProductId của các sản phẩm bán chạy
+                .ToListAsync();
+
+            // Lấy chi tiết các sản phẩm bán chạy và bao gồm thông tin liên quan
+            var products = await _context.Products
+                .Where(p => topSellingProducts.Contains(p.Id))
+                .Include(p => p.Category) // Chỉ Include sau khi đã lọc đúng sản phẩm
+                .ToListAsync();
+
+            return products;
+        }
+
+        public string GetUserId()
         {
             var principal = _httpContextAccessor.HttpContext.User;
             string userId = _userManager.GetUserId(principal);
             return userId;
         }
+        public async Task<Order> GetLatestOrderForUser(string userId)
+        {
+            return await _context.Orders
+                .Where(order => order.UserId == userId)
+                .OrderByDescending(order => order.CreateDate)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<List<Order>> GetOrderHistory(string userId, string orderCode = null, int? orderStatus = null)
+        {
+            var query = _context.Orders
+                .Include(o => o.OrderStatus)
+                .Include(o => o.OrderDetail)
+                .Where(o => o.UserId == userId && !o.IsDeleted);
+
+            if (!string.IsNullOrEmpty(orderCode))
+            {
+                query = query.Where(o => o.Id.ToString().Contains(orderCode));
+            }
+
+            if (orderStatus.HasValue)
+            {
+                query = query.Where(o => o.OrderStatusId == orderStatus);
+            }
+
+            return await query.OrderByDescending(o => o.CreateDate).ToListAsync();
+        }
+
+        public async Task<Order> GetOrderById(int orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderStatus)
+                .Include(o => o.OrderDetail)
+                    .ThenInclude(d => d.Product) // Tải dữ liệu từ bảng Product
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
+
+
+
+        public async Task<bool> CancelOrder(int orderId, string userId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId && o.OrderStatusId == 1); // Chỉ cho phép hủy nếu trạng thái là chờ xác nhận
+
+            if (order == null)
+                return false;
+
+            order.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
 
 
     }
 }
-    
+

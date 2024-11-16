@@ -9,5 +9,6 @@ namespace KhaKhau.Repositories
         Task AddAsync(Category category);
         Task UpdateAsync(Category category);
         Task DeleteAsync(int id);
+
     }
 }

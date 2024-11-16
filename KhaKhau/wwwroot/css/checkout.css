@@ -1,0 +1,237 @@
+﻿:root {
+    --primary-color: #4CAF50;
+    --primary-dark: #45a049;
+    --secondary-color: #2196F3;
+    --text-color: #333;
+    --border-radius: 15px;
+}
+
+body {
+    background: #f8f9fa;
+}
+
+
+.checkout-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px;
+}
+
+.checkout-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 1000px;
+    animation: fadeIn 1s ease;
+}
+
+.cart-summary {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+    .cart-summary h4 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
+    }
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+    .table thead th {
+        background: #fff;
+        border: none;
+        color: #34495e;
+        font-weight: 600;
+        padding: 15px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .table tbody tr {
+        background: white;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+        .table tbody tr:hover {
+            transform: translateY(-3px);
+        }
+
+    .table tbody td {
+        border: none;
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .table img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    .table tfoot tr {
+        background: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .table tfoot th {
+        padding: 15px;
+        color: #2c3e50;
+    }
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.text-muted {
+    color: #666 !important;
+}
+
+.animate__animated {
+    animation-duration: 0.8s;
+}
+
+.form-control, .form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+    }
+
+.btn-primary {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+
+.text-danger {
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+/* Custom Sweet Alert Styling */
+.swal2-popup {
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.swal2-title {
+    color: #2c3e50 !important;
+    font-size: 1.5rem !important;
+}
+
+.swal2-content {
+    color: #34495e !important;
+}
+
+.swal2-confirm {
+    background: #4CAF50 !important;
+    border-radius: 10px !important;
+    padding: 12px 30px !important;
+}
+
+.swal2-deny, .swal2-cancel {
+    border-radius: 10px !important;
+    padding: 12px 30px !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-card {
+        padding: 1.5rem;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody td {
+        display: block;
+        text-align: right;
+        padding: 10px;
+        position: relative;
+        padding-left: 50%;
+    }
+
+        .table tbody td:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 15px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+    .table img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .btn-primary {
+        padding: 12px 20px;
+    }
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

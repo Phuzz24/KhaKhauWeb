@@ -17,21 +17,35 @@ namespace KhaKhau.Controllers
        
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICartRepository _cartRepository;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ICartRepository cartRepository)
         {
             _logger = logger;
             this._userManager = userManager;
+            _cartRepository = cartRepository;
+
+        }
+        public async Task<IActionResult> Index()
+        {
+            ViewData["UserID"] = _userManager.GetUserId(this.User);
+            var topSellingProducts = await _cartRepository.GetTopSellingProductsAsync();
+
+            // Lấy dữ liệu từ ShoppingCart nếu cần
+            var shoppingCart = await _cartRepository.GetUserCart();
+            ViewData["CartItemCount"] = shoppingCart?.CartDetails.Count ?? 0; // Ví dụ: số lượng sản phẩm trong giỏ hàng
+
+            var viewModel = new HomeViewModel
+            {
+                TopSellingProducts = topSellingProducts
+            };
+
+            return View(viewModel);
         }
 
-        [AllowAnonymous]
-        
-        public IActionResult Index() {
-          
-            ViewData["UserID"]= _userManager.GetUserId(this.User);
-        
-            return View();
-        }
+
+
         [Authorize(Roles ="user")]
         
         public IActionResult Privacy()
@@ -47,6 +61,15 @@ namespace KhaKhau.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public IActionResult GioiThieu()
+        {
+            return View();
+               
+        }
+        public IActionResult DatBan()
+        {
+            return View();
         }
     }
 }

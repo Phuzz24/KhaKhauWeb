@@ -1,20 +1,13 @@
-﻿
-
-@{
-    ViewData["Title"] = "Home";
-    Layout = "~/Views/Shared/_ParallelScrollLayout.cshtml";
-
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_HomeLayout";
 }
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 <script src="~/js/main.js"></script>
-<div class="navbar">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-<partial name="_HeaderLayout" class="nav_bar" />
-</div>
-
- <div class="slider-content">
+<div class="slider-content">
     <div class="slider">
         <!-- Slide 1 -->
         <div class="image-slide active">
@@ -32,12 +25,12 @@
             <img src="~/images/food4.jpg" alt="Banner 4">
         </div>
     </div>
-<!-- Nút điều hướng -->
-<button class="prev" onclick="moveImageSlide(-1)">&#10094;</button>
-<button class="next" onclick="moveImageSlide(1)">&#10095;</button>
-</div> 
-<!--Category-->
- <div class="category">
+
+    <!-- Nút điều hướng -->
+    <button class="prev" onclick="moveImageSlide(-1)">&#10094;</button>
+    <button class="next" onclick="moveImageSlide(1)">&#10095;</button>
+</div>
+<div class="category">
     <div class="product-grid">
         <div class="product-item">
             <img src="/images/ga-chien-bot.jpg" alt="">
@@ -56,4 +49,232 @@
             <p>Hải sản</p>
         </div>
     </div>
-</div> 
+</div>
+@model KhaKhau.Models.HomeViewModel
+
+<!-- Top Selling Products Section -->
+<div class="container mt-5 top-selling-container">
+    <h2 class="top-selling-title">Sản Phẩm Bán Chạy Nhất</h2>
+    <div class="product-flex-grid">
+        @foreach (var product in Model.TopSellingProducts)
+        {
+            <div class="product-card">
+                <div class="card">
+                    <img src="@Url.Content(product.ImageUrl ?? "~/images/NoImage.png")" class="card-img-top" alt="@product.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Price.ToString("#,##0") đ</p>
+                        <p class="card-text">@product.Category.Name</p>
+                        <div class="button-group">
+                            <button class="btn btn-add-to-cart" onclick="addToCart(@product.Id)">Thêm vào giỏ</button>
+                            <button class="btn btn-buy-now" onclick="buyNow(@product.Id)">Mua ngay</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<!-- Additional CSS for Top Selling Products -->
+<style>
+    /* Top Selling Products Section */
+    .top-selling-container {
+        background-color: #fdf7f3; /* Màu nền nhẹ */
+        padding: 40px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .top-selling-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #650b0b;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+    }
+
+    .product-flex-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .product-card {
+        width: 300px;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px); /* Hiệu ứng nhô lên khi hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        text-transform: capitalize;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    .btn-primary {
+        background-color: #650b0b;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #fff;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        text-transform: uppercase;
+    }
+
+        .btn-primary:hover {
+            background-color: #953636; /* Màu đậm hơn khi hover */
+            transform: scale(1.05); /* Hiệu ứng phóng to nhẹ */
+        }
+    /* Wrapper cho nút */
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+        /* Nút chung */
+        .button-group .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+    /* Nút "Thêm vào giỏ" */
+    .btn-add-to-cart {
+        background-color: #f6c23e; /* Vàng nổi bật */
+        color: #fff;
+    }
+
+        .btn-add-to-cart:hover {
+            background-color: #d89c23; /* Vàng đậm khi hover */
+            transform: scale(1.05); /* Hiệu ứng phóng to nhẹ */
+        }
+
+    /* Nút "Mua ngay" */
+    .btn-buy-now {
+        background-color: #650b0b; /* Đỏ nổi bật */
+        color: #fff;
+    }
+
+        .btn-buy-now:hover {
+            background-color: #953636; /* Đỏ đậm hơn khi hover */
+            transform: scale(1.05); /* Hiệu ứng phóng to nhẹ */
+        }
+
+</style>
+<script>
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseover', () => {
+            card.classList.add('hover-effect');
+        });
+        card.addEventListener('mouseout', () => {
+            card.classList.remove('hover-effect');
+        });
+    });
+    async function addToCart(productId) {
+        try {
+            const response = await fetch(`/Cart/AddItem?productId=${productId}&qty=1`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                const cartCount = await response.json();
+                document.getElementById('cartCount').innerText = cartCount; // Cập nhật số lượng trong giỏ
+
+                // Hiển thị thông báo thành công với SweetAlert
+                Swal.fire({
+                    title: 'Thêm vào giỏ hàng thành công!',
+                    text: 'Sản phẩm đã được thêm vào giỏ hàng của bạn.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                Swal.fire({
+                    title: 'Lỗi',
+                    text: 'Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        } catch (error) {
+            console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+    function buyNow(productId) {
+        Swal.fire({
+            title: 'Mua ngay',
+            text: `Bạn đang mua ngay sản phẩm ID ${productId}.`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Tiếp tục thanh toán',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/Checkout/BuyNow?productId=${productId}`;
+            }
+        });
+    }
+
+</script>
+
+
+
+
+

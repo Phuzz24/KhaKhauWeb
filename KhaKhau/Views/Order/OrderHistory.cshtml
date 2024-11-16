@@ -1,0 +1,202 @@
+﻿@model List<KhaKhau.Models.Order>
+@{
+    ViewData["Title"] = "Lịch sử đơn hàng";
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="~/css/orderhistory.css" rel="stylesheet" />
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Lịch sử đơn hàng</h2>
+
+    <!-- Hiển thị thông báo -->
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            Swal.fire('Thành công', '@TempData["Message"]', 'success');
+        </script>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <script>
+            Swal.fire('Lỗi', '@TempData["Error"]', 'error');
+        </script>
+    }
+
+    <!-- Form tìm kiếm và bộ lọc -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="searchOrderCode" class="form-control" placeholder="Nhập mã đơn hàng" />
+        </div>
+        <div class="col-md-4">
+            <select name="statusId" class="form-select">
+                <option value="">Tất cả trạng thái</option>
+                <option value="1">Chờ xác nhận</option>
+                <option value="2">Đang giao</option>
+                <option value="3">Đã giao</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <!-- Danh sách đơn hàng -->
+    <table class="table table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã đơn hàng</th>
+                <th>Ngày đặt</th>
+                <th>Trạng thái</th>
+                <th>Tổng tiền</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.CreateDate.ToString("dd/MM/yyyy")</td>
+                        <td>@order.OrderStatus.StatusName</td>
+                        <td>@order.OrderDetail.Sum(d => d.Quantity * d.UnitPrice).ToString("N0") đ</td>
+                        <td>
+                            <a asp-action="OrderDetails" asp-route-orderId="@order.Id" class="btn btn-info btn-sm">Xem chi tiết</a>
+
+                            @if (order.OrderStatusId == 1)
+                            {
+                                <form method="post" asp-action="CancelOrder" asp-route-orderId="@order.Id" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy đơn</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Không thể hủy</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">Không tìm thấy đơn hàng nào</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // Add loading animation
+        $(document).ajaxStart(function () {
+            Swal.fire({
+                title: 'Đang tải...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }).ajaxStop(function () {
+            Swal.close();
+        });
+
+        // Enhanced search function
+        function searchOrders() {
+            const orderCode = $('#orderCode').val();
+            const orderStatus = $('#orderStatus').val();
+
+            $.ajax({
+                url: '/Order/SearchOrderHistory',
+                type: 'GET',
+                data: { orderCode: orderCode, orderStatus: orderStatus },
+                success: function (data) {
+                    $('#orderTableBody').html(data);
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Tìm kiếm thành công!'
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        text: 'Không thể tìm kiếm đơn hàng.',
+                        confirmButtonColor: '#4CAF50'
+                    });
+                }
+            });
+        }
+
+        // Enhanced cancel order function
+            // Hàm hủy đơn hàng
+            function cancelOrder(orderId) {
+                Swal.fire({
+                    title: 'Xác nhận hủy đơn hàng',
+                    text: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff4444',
+                    cancelButtonColor: '#4CAF50',
+                    confirmButtonText: 'Có, hủy đơn!',
+                    cancelButtonText: 'Không',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/Order/CancelOrder', // Đảm bảo đúng URL xử lý
+                            type: 'POST',
+                            data: { orderId: orderId },
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Hủy thành công!',
+                                    text: 'Đơn hàng đã được hủy thành công.',
+                                    confirmButtonColor: '#4CAF50'
+                                }).then(() => {
+                                    // Reload lại trang hoặc cập nhật danh sách đơn hàng
+                                    location.reload();
+                                });
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi!',
+                                    text: 'Không thể hủy đơn hàng. Vui lòng thử lại.',
+                                    confirmButtonColor: '#4CAF50'
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+
+        // Add animation for table rows
+        $('.table tbody tr').hover(
+            function () {
+                $(this).find('td').css('background-color', '#f5f5f5');
+            },
+            function () {
+                $(this).find('td').css('background-color', '');
+            }
+        );
+
+        // Add status badges
+        $('.table td:contains("choxacnhan")').html('<span class="status-badge status-pending">Chờ xác nhận</span>');
+        $('.table td:contains("đang giao")').html('<span class="status-badge status-delivering">Đang giao</span>');
+        $('.table td:contains("đã giao")').html('<span class="status-badge status-delivered">Đã giao</span>');
+    });
+</script>

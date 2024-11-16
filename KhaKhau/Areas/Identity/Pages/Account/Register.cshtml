@@ -1,132 +1,110 @@
 ﻿@page
 @model RegisterModel
+
 @{
-    //ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = "_HomeLayout";
 }
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
-<h1>@ViewData["Title"]</h1>
-<style>
-    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link href="~/font/fontawesome-free-6.6.0-web/css/all.css" rel="stylesheet" />
+<link href="/css/login.css" rel="stylesheet" /> <!-- Sử dụng login.css để đồng bộ -->
 
-    .socialmedia {
-        height: 45px;
-        width: 45px;
-        display: flex;
-        display:inline-block;
-        align-items: center;
-        justify-content: center;
-        color: #C5705D;
-        border: 1px solid #C5705D;
-        border-radius: 50px;
-        margin: 0 5px;
+<div class="container-fluid vh-100 position-relative">
+    <!-- GIF nền -->
+    <div class="background-gif">
+        <img src="~/images/source.gif" alt="Background GIF"> <!-- Dùng cùng GIF như login -->
+    </div>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
 
-    }
-
-    .socialmedia:hover {
-        color: #D0B8A8;
-        border-color: #D0B8A8;
-    }
-</style>
-<div class="bg-opacity-75 bg-light align-content-center border-5 flex-wrap ">
-  
-   
-        <div class="row">
-            <div class="col-md-6 mx-auto ">
-                <h3 class="d d-inline-block">
-                    Create a new account.
-                </h3>
+        <!-- Form đăng ký -->
+        <div class="login-box-container position-absolute top-50 start-50 translate-middle">
+            <div class="login-box">
+                <h2 class="text-center">Tạo tài khoản mới</h2>
+                <p class="text-center">Sử dụng thông tin để tạo tài khoản</p>
                 <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-
-                    <div class="form-floating mb-2">
-                        <input asp-for="Input.FirstName " class="form-control" autocomplete="username" aria-required="true" />
-                        <label asp-for="Input.FirstName"></label>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.FirstName" class="form-control" placeholder="Họ" autocomplete="username" aria-required="true" />
+                        <label asp-for="Input.FirstName">Họ</label>
                         <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                     </div>
-                    <div class="form-floating mb-2">
-                        <input asp-for="Input.LastName" class="form-control" autocomplete="username" aria-required="true" />
-                        <label asp-for="Input.LastName"></label>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.LastName" class="form-control" placeholder="Tên" autocomplete="username" aria-required="true" />
+                        <label asp-for="Input.LastName">Tên</label>
                         <span asp-validation-for="Input.LastName" class="text-danger"></span>
                     </div>
-                    <div class="form-floating mb-2">
-                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                        <label asp-for="Input.Email"></label>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Email" class="form-control" placeholder="Email" autocomplete="username" aria-required="true" />
+                        <label asp-for="Input.Email">Email</label>
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
-                    <div class="form-floating mb-2">
-                        <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="username" aria-required="true" />
-                        <label asp-for="Input.PhoneNumber"></label>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Số điện thoại" autocomplete="username" aria-required="true" />
+                        <label asp-for="Input.PhoneNumber">Số điện thoại</label>
                         <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                     </div>
-                    <div class="form-floating mb-2">
-                        <input asp-for="Input.Address" class="form-control" autocomplete="username" aria-required="true" />
-                        <label asp-for="Input.Address"></label>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Address" class="form-control" placeholder="Địa chỉ" autocomplete="username" aria-required="true" />
+                        <label asp-for="Input.Address">Địa chỉ</label>
                         <span asp-validation-for="Input.Address" class="text-danger"></span>
                     </div>
-                    <div class="form-floating mb-2">
-                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                        <label asp-for="Input.Password"></label>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control" placeholder="Mật khẩu" autocomplete="new-password" aria-required="true" />
+                        <label asp-for="Input.Password">Mật khẩu</label>
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
-                    <div class="form-floating mb-2">
-                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                        <label asp-for="Input.ConfirmPassword"></label>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="new-password" aria-required="true" />
+                        <label asp-for="Input.ConfirmPassword">Xác nhận mật khẩu</label>
                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                     </div>
 
-
-                    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-primary btn-custom">Đăng ký</button>
+                    <div class="text-center mt-2">
+                        <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="custom-link">Đã có tài khoản</a>
+                    </div>
                 </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 mx-auto ">
-                <section>
-                    <h3 class="d-inline-block">Use another service to register.</h3>
-                    <hr />
-                    @{
-                        if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                        {
-                            <div>
-                                <p>
-                                    There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                                        article
-                                        about setting up this ASP.NET application to support logging in via external services
-                                    </a>.
-                                </p>
-                            </div>
-                        }
-                        else
-                        {
-                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal d-flex justify-content-center">
-                                <div>
-                                    <p>
-                                        @foreach (var provider in Model.ExternalLogins!)
-                                        {
-                                            @if (@provider.DisplayName.Equals("Google"))
-                                            {
-                                                <button class="socialmedia" type="submit" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fab fa-google"></i></button>
 
-                                            }
-                                            else if (@provider.DisplayName.Equals("Facebook"))
-                                            {
-
-
-                                                <button class="socialmedia" type="submit" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"> <i class="fab fa-facebook"></i></button>
-                                            }
-                                        }
-                                    </p>
-                                </div>
-                            </form>
-                        }
-                    }
-                </section>
+                <!-- External Login Options -->
+                <hr />
+                <p class="text-center mt-4">Hoặc đăng ký bằng:</p>
+                <div class="external-login-buttons d-flex justify-content-center gap-3">
+                    <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <button type="submit" name="provider" value="Google" class="btn btn-google">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                    </form>
+                    <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <button type="submit" name="provider" value="Facebook" class="btn btn-facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Kiểm tra nếu có thông báo đăng ký thành công trong TempData
+        @if (TempData["RegistrationSuccess"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đăng ký thành công!',
+                    text: 'Bạn đã đăng ký tài khoản thành công. Chuyển hướng đến trang đăng nhập...',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = '@Url.Page("/Account/Login", new { area = "Identity" })';
+                });
+            </text>
+        }
+    </script>
 }

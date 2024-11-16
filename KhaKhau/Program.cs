@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using KhaKhau.Data;
 using Microsoft.AspNetCore.Authentication;
 using KhaKhau.Areas.Identity.Data;
@@ -29,6 +29,7 @@ builder.Services.AddScoped<IUserResponsitory, EFUserRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IUserOrderRepository , UserOrderRepository>();
 builder.Services.AddScoped<IStockRepository ,StockRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 //them vao 19/10/24: sql dk, dn
@@ -55,7 +56,7 @@ builder.Services.AddAuthentication()
                     options.ClientSecret = builder.Configuration["App:GoogleClientSecret"];
                     // Map the external picture claim to the internally used image claim
                     options.ClaimActions.MapJsonKey("image", "picture");
-            
+
                 })
                 .AddFacebook(options =>
                 {
@@ -73,28 +74,28 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 //can phai dung thu tu Authen trc Author
-app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
 app.UseRouting();
-
+app.UseSession(); // Đảm bảo việc dùng session trước khi định tuyến
+app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession();
 
-app.MapRazorPages();
-
-//phan vung admin:
 app.UseEndpoints(endpoints =>
 {
+    // Map Razor Pages (bao gồm các trang Identity) đầu tiên
+    endpoints.MapRazorPages();
+
+    // Định tuyến mặc định cho các controller của MVC
     endpoints.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller=ProductManager}/{action=Index}/{id?}"
-    );
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    // Cấu hình định tuyến cho các area
+    endpoints.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=ProductManager}/{action=Index}/{id?}");
 });
-//dieu huong phan vung cho trang 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.Run();

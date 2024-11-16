@@ -1,54 +1,75 @@
-﻿@using KhaKhau.Areas.Identity.Data;
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-@inject SignInManager<ApplicationUser> SignInManager
-
-@inject UserManager<ApplicationUser> UserManager
-@{
-    
+﻿@{
     Layout = null;
 }
 
-<link href="~/css/order_success.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" rel="stylesheet" />
-<body>
-   
-<div class="container mt-5 d-flex justify-content-center">
-        <div class="card p-4 mt-3">
-        <div class="d-flex justify-content-center mb-0 my-0">
-			<img src="~/images/logo_res.png" width="150px"/>
-        </div>
-        <div class="first d-flex justify-content-between align-items-center mb-3">
-           
-            <div class="info">
-                <span class="d-block name">Thank you so much</span>
-                <span class="order">Order - 4554645</span>
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 
-            </div>
+<div class="container success-container mt-5 d-flex justify-content-center align-items-center">
+    <div class="card p-5 text-center">
+        <div class="mb-4">
+            <img src="~/images/logo_res.png" width="100px" />
+        </div>
+        <h2 class="text-success mb-3">Đặt hàng thành công!</h2>
+        <p class="mb-1">Cảm ơn bạn, đơn hàng của bạn đã được xử lý thành công.</p>
 
-			<img src="~/images/ic_shipping.png" />
-        </div>
-        <div class="detail">
-            <span class="d-block summery">Your order has been dispatched. we are delivering you order.</span>
-        </div>
-        <hr style="background-color:#3a9800;height:2px" />
-        <div class="text">
-                <span class="d-block new mb-1">@User.Identity.Name</span>
-        </div>
-        <span class="d-block address mb-3">672 Conaway Street Bryantiville Massachusetts 02327</span>
-        <div class="money d-flex flex-row mt-2 align-items-center">
-			<img src="~/images/ic_money.png" />
-            <span class="ml-2"></span>
+        <p><strong>Mã đơn hàng:</strong> @TempData["OrderId"]</p>
+        <p>Chúng tôi đang chuẩn bị giao hàng cho bạn.</p>
 
+        <hr />
+
+        <div class="user-info my-3">
+            <p><strong>Khách hàng:</strong> @TempData["OrderUserName"]</p>
+            <p><strong>Địa chỉ giao hàng:</strong> @TempData["OrderAddress"]</p>
         </div>
-        <div class="last d-flex justify-content-lg-center mt-3">
-                <a class="nav-link" asp-controller="Product" asp-action="Index" >
-                Thêm món thêm vui!
+
+        <div class="btn-group">
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-home"></i> Về Trang Chủ
             </a>
-
+            <a asp-controller="Product" asp-action="Index" class="btn btn-success">
+                <i class="fas fa-shopping-cart"></i> Thêm món thêm vui!
+            </a>
         </div>
     </div>
 </div>
-</body>
+
+<style>
+    .success-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        max-width: 500px;
+        border: none;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .text-success {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .btn-group .btn {
+        margin: 10px 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            title: 'Đặt hàng thành công!',
+            text: 'Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn sẽ được xử lý.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>

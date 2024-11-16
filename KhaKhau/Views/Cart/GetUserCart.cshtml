@@ -1,23 +1,31 @@
 ﻿@model ShoppingCart
 @{
     Layout = null;
+    int totalItems = Model.CartDetails.Sum(item => item.Quantity); // Tính tổng số lượng sản phẩm trong giỏ hàng
+
 }
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-<partial name="_HeaderLayout"/>
-<div style="width:90%;margin:auto" class="mt-2">
+<link href="~/css/cart.css" rel="stylesheet" />
+<!-- Thư viện CSS của Bootstrap và SweetAlert2 -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<partial name="_HeaderLayout" />
+<div style="width: 90%; margin: auto;" class="mt-2 animated fadeIn">
     @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
     {
-        <h5>My Cart</h5>
+        <h5 class="text-center">Giỏ Hàng Của Tôi</h5>
+        <span class="badge badge-pill badge-primary">Số lượng sản phẩm hiện tại: @totalItems</span>
 
-        <table class="table table-striped">
-            <tr>
-                <th>Product</th>
-                <th>Image</th>
-                <th>Category</th>
-                <th>Unit Price(VND)</th>
-                <th>Total Price</th>
-                <th>Action</th>
-            </tr>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Hình ảnh</th>
+                    <th>Loại</th>
+                    <th>Giá(VND) x Số lượng</th>
+                    <th>Tổng tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
             @foreach (var item in Model.CartDetails)
             {
                 <tr>
@@ -33,15 +41,17 @@
                         }
                     </td>
                     <td>@item.Product.Category.Name</td>
-                    <td>@item.Product.Price.ToString("#,##0") X @item.Quantity</td>
-              
-                    <td> @(item.Product.Price * item.Quantity)</td>
+                    <td>@item.Product.Price.ToString("#,##0") x @item.Quantity</td>
+                    @{
+                        var totalPrice = (item.Product.Price * item.Quantity).ToString("#,##0");
+                    }
+                    <td>@totalPrice</td>
                     <td>
                         @* Increase Quantity button should be invisible if not enough stock*@
                         @if (item.Quantity < item.Product.Stock.Quantity)
-                        { 
+                        {
                             <a class="btn btn-info" href="/Cart/AddItem?productId=@item.ProductId&&redirect=1">+</a>
-                         }
+                        }
                         else
                         {
                             <span style="border: 1px solid;padding: 8px 8px;color: red;border-radius: 5px;margin-right:4px">Out of stock </span>
@@ -51,23 +61,108 @@
                 </tr>
             }
         </table>
-
-        <div class="my-2">
-            <h5>Total(VND): </h5>
-            @(Model.CartDetails.Select(item => item.Product.Price * item.Quantity).Sum())
+        <div class="my-2 text-right">
+            <h4 class="total-price">Tổng Cộng:<span class="text-danger"> @Model.CartDetails.Select(item => item.Product.Price * item.Quantity).Sum().ToString("#,##0") đ</span></h4>
         </div>
 
-        <div class="my-2">
-            <a class="btn btn-primary" href="/Cart/Checkout">Checkout</a>
+        <div class="my-2 text-right">
+            <a class="btn btn-secondary" href="/Product/Index">Tiếp tục mua hàng</a> <!-- Nút Tiếp Tục Mua Hàng -->
+            <a class="btn btn-primary" href="/Cart/Checkout">Thanh toán</a> <!-- Nút Thanh Toán -->
         </div>
 
     }
     else
     {
-        <h5>Cart is empty</h5>
+        <div class="empty-cart text-center">
+            <h5 class="text-center">Giỏ hàng của bạn đang trống</h5>
+            <a href="/Product/Index" class="btn btn-primary btn-return mt-3">Quay về trang sản phẩm</a>
+        </div>
     }
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+
+<style>
+
+</style>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script>
+    async function updateQuantity(productId, change) {
+        const url = change > 0 ? `/Cart/AddItem?productId=${productId}&redirect=1` : `/Cart/RemoveItem?productId=${productId}`;
+        try {
+            const response = await fetch(url, { method: 'POST' });
+            if (response.ok) {
+                location.reload(); // Tải lại trang sau khi cập nhật số lượng
+            } else {
+                alert('Không thể cập nhật số lượng. Vui lòng thử lại.');
+            }
+        } catch (error) {
+            console.error('Lỗi khi cập nhật số lượng:', error);
+        }
+    }
+
+    async function removeItem(productId) {
+        swal({
+            title: "Bạn có chắc không?",
+            text: "Sản phẩm này sẽ bị xóa khỏi giỏ hàng!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDelete) => {
+            if (willDelete) {
+                try {
+                    const response = await fetch(`/Cart/RemoveItem?productId=${productId}`, { method: 'POST' });
+                    if (response.ok) {
+                        await updateCartCount(); // Cập nhật lại số lượng sản phẩm trong giỏ
+                        swal("Sản phẩm đã được xóa khỏi giỏ hàng!", {
+                            icon: "success",
+                        }).then(() => {
+                            location.reload(); // Tải lại trang để cập nhật danh sách giỏ hàng
+                        });
+                    } else {
+                        swal("Không thể xóa sản phẩm. Vui lòng thử lại.", {
+                            icon: "error",
+                        });
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi xóa sản phẩm:', error);
+                    swal("Đã xảy ra lỗi khi xóa sản phẩm. Vui lòng thử lại.", {
+                        icon: "error",
+                    });
+                }
+            } else {
+                swal("Sản phẩm vẫn còn trong giỏ hàng!");
+            }
+        });
+    }
+
+
+    // Hàm để cập nhật số lượng sản phẩm trên biểu tượng giỏ hàng
+    async function updateCartCount() {
+        try {
+            const response = await fetch('/Cart/GetTotalItemInCart');
+            if (response.ok) {
+                const cartCount = await response.json();
+                document.getElementById('cartCount').innerText = cartCount; // Hiển thị số lượng sản phẩm trên biểu tượng giỏ hàng
+            }
+        } catch (error) {
+            console.error('Lỗi khi lấy số lượng sản phẩm trong giỏ:', error);
+        }
+    }
+
+    // Gọi hàm updateCartCount khi trang được tải
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+
+</script>

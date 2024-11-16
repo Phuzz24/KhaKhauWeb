@@ -1,53 +1,291 @@
 ﻿@model CheckoutModel
 @{
-    ViewData["Title"] = "Checkout";
+    ViewData["Title"] = "Thanh toán";
     Layout = null;
 }
+<link href="/css/checkout.css" rel="stylesheet" />
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
 <partial name="_HeaderLayout" />
-<h2>Checkout</h2>
-<form asp-action="Checkout">
-    <div class="py-3 px-3">
-        <label asp-for="Name">Name*</label>
-        <input type="text" class="form-control" asp-for="Name" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
     </div>
-
-    <div class="py-3 px-3">
-        <label asp-for="Email">Email*</label>
-        <input type="text" class="form-control" asp-for="Email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-
-    </div>
-
-    <div class="py-3 px-3">
-        <label asp-for="MobileNumber">Mobile  Number*</label>
-        <input type="text" class="form-control" asp-for="MobileNumber" />
-        <span asp-validation-for="MobileNumber" class="text-danger"></span>
-    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
 
 
-    <div class="py-3 px-3">
-        <label asp-for="Address">Address*</label>
-        <textarea class="form-control" asp-for="Address" rows="5"> </textarea>
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
+<div class="checkout-container mt-5">
+    <div class="checkout-card">
+        <h2 class="text-center">Thanh toán</h2>
+        <p class="text-center text-muted mb-4">Vui lòng kiểm tra đơn hàng của bạn và điền thông tin để hoàn tất thanh toán</p>
 
-    <div class="py-3 px-3">
-        <span class="mr-2">COD*</span>
-        <select asp-for="PaymentMethod" class="form-control">
-            <option value="">Select Payment Method</option>
-            @foreach (var method in Enum.GetValues(typeof(KhaKhau.Constrants.PaymentMethods)))
+        <div class="cart-summary">
+            <h4 class="mb-4">Giỏ hàng của bạn</h4>
+            @if (Model.CartItems != null && Model.CartItems.Any())
             {
-                <option value="@method.ToString()">@method.ToString()</option>
-
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Hình ảnh</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td><img src="@item.ImageUrl" alt="@item.Name" width="50" /></td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitPrice.ToString("C")</td>
+                                <td>@((item.Quantity * item.UnitPrice).ToString("C"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="4" class="text-end">Tổng cộng:</th>
+                            <th>@Model.TotalAmount.ToString("C")</th>
+                        </tr>
+                    </tfoot>
+                </table>
             }
-        </select>
-        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
-    </div>
+            else
+            {
+                <p>Giỏ hàng của bạn đang trống.</p>
+            }
 
-    <div class="py-4 px-3 ml-lg-5">
-        <button type="submit" c class="btn btn-info ">Next</button>
 
+        </div>
+
+        <div class="checkout-container mt-5">
+            <div class="checkout-card animate__animated animate__fadeIn">
+                <h2 class="text-center animate__animated animate__fadeInDown">Thanh toán</h2>
+                <p class="text-center text-muted mb-4 animate__animated animate__fadeIn">Vui lòng điền thông tin của bạn để hoàn tất thanh toán</p>
+
+                <form method="post" action="/Cart/Checkout" id="checkoutForm">
+                    <div class="form-group mb-3 animate__animated animate__fadeInLeft">
+                        <label class="form-label" for="Name">Tên người nhận*</label>
+                        <input type="text" class="form-control" placeholder="Nhập họ và tên" data-val="true" data-val-maxlength="Tên không được quá 30 ký tự." data-val-maxlength-max="30" data-val-required="Vui lòng nhập tên." id="Name" maxlength="30" name="Name" value="" />
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="form-group mb-3 animate__animated animate__fadeInLeft" style="animation-delay: 0.1s">
+                        <label class="form-label" for="Email">Email*</label>
+                        <input type="email" class="form-control" placeholder="Nhập địa chỉ email" data-val="true" data-val-email="Email không hợp lệ." data-val-maxlength="Email không được quá 30 ký tự." data-val-maxlength-max="30" data-val-required="Vui lòng nhập email." id="Email" maxlength="30" name="Email" value="" />
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="form-group mb-3 animate__animated animate__fadeInLeft" style="animation-delay: 0.2s">
+                        <label class="form-label" for="MobileNumber">Số điện thoại*</label>
+                        <input type="text" class="form-control" placeholder="Nhập số điện thoại" data-val="true" data-val-required="Vui lòng nhập số điện thoại." id="MobileNumber" name="MobileNumber" value="" />
+                        <span class="text-danger field-validation-valid" data-valmsg-for="MobileNumber" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="province">Tỉnh/Thành phố</label>
+                        <select id="province" name="Province" class="form-select" onchange="loadDistricts()">
+                            <option value="">Chọn tỉnh/thành phố</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="district">Quận/Huyện</label>
+                        <select id="district" name="District" class="form-select" onchange="loadWards()">
+                            <option value="">Chọn quận/huyện</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="ward">Phường/Xã</label>
+                        <select id="ward" name="Ward" class="form-select">
+                            <option value="">Chọn phường/xã</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="Address">Địa chỉ chi tiết (số nhà, đường)</label>
+                        <textarea class="form-control" rows="3" placeholder="Nhập địa chỉ cụ thể" id="Address" maxlength="200" name="Address"></textarea>
+                    </div>
+
+                    <div class="form-group mb-4 animate__animated animate__fadeInLeft" style="animation-delay: 0.4s">
+                        <label class="form-label" for="PaymentMethod">Phương thức thanh toán*</label>
+                        <select class="form-select" data-val="true" data-val-required="Vui lòng chọn phương thức thanh toán." id="PaymentMethod" name="PaymentMethod">
+                            <option value="">Chọn phương thức thanh toán</option>
+                            <option value="COD">Thanh toán khi nhận hàng</option>
+                            <option value="Online">Thanh toán online</option>
+                        </select>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="PaymentMethod" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="text-center animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Tiến hành thanh toán</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Form validation
+        $("#checkoutForm").validate({
+            rules: {
+                Name: "required",
+                Email: {
+                    required: true,
+                    email: true
+                },
+                MobileNumber: {
+                    required: true,
+                    minlength: 10
+                },
+                Address: "required",
+                PaymentMethod: "required"
+            },
+            messages: {
+                Name: "Vui lòng nhập họ và tên.",
+                Email: {
+                    required: "Vui lòng nhập địa chỉ email.",
+                    email: "Vui lòng nhập một địa chỉ email hợp lệ."
+                },
+                MobileNumber: {
+                    required: "Vui lòng nhập số điện thoại.",
+                    minlength: "Số điện thoại phải có ít nhất 10 chữ số."
+                },
+                Address: "Vui lòng nhập địa chỉ giao hàng.",
+                PaymentMethod: "Vui lòng chọn phương thức thanh toán."
+            },
+            submitHandler: function (form) {
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    text: 'Vui lòng đợi trong khi chúng tôi xử lý đơn hàng của bạn.',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setTimeout(function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Đặt hàng thành công!',
+                        text: 'Cảm ơn bạn đã mua hàng.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Chuyển hướng hoặc thực hiện hành động khác
+                            // window.location.href = '/order-confirmation';
+                        }
+                    });
+                }, 2000);
+
+                return false;
+            }
+        });
+
+        // Add animation to form fields on focus
+        $('.form-control, .form-select').focus(function () {
+            $(this).addClass('animate__animated animate__pulse');
+        }).blur(function () {
+            $(this).removeClass('animate__animated animate__pulse');
+        });
+    });
+    
+
+    //API Địa chỉ
+    async function loadProvinces() {
+        try {
+            const response = await fetch('https://provinces.open-api.vn/api/p/');
+            const provinces = await response.json();
+            const provinceDropdown = document.getElementById("province");
+
+            provinces.forEach(province => {
+                const option = document.createElement("option");
+                option.value = province.name;
+                option.textContent = province.name;
+                option.dataset.code = province.code; // Lưu mã để load huyện
+                provinceDropdown.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading provinces:", error);
+        }
+    }
+
+    async function loadDistricts() {
+        const provinceDropdown = document.getElementById("province");
+        const selectedProvince = provinceDropdown.options[provinceDropdown.selectedIndex];
+        const provinceCode = selectedProvince.dataset.code;
+
+        if (!provinceCode) return;
+
+        try {
+            const response = await fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`);
+            const data = await response.json();
+            const districts = data.districts;
+
+            const districtDropdown = document.getElementById("district");
+            districtDropdown.innerHTML = '<option value="">Chọn quận/huyện</option>';
+
+            districts.forEach(district => {
+                const option = document.createElement("option");
+                option.value = district.name;
+                option.textContent = district.name;
+                option.dataset.code = district.code; // Lưu mã để load phường
+                districtDropdown.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading districts:", error);
+        }
+    }
+
+    async function loadWards() {
+        const districtDropdown = document.getElementById("district");
+        const selectedDistrict = districtDropdown.options[districtDropdown.selectedIndex];
+        const districtCode = selectedDistrict.dataset.code;
+
+        if (!districtCode) return;
+
+        try {
+            const response = await fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`);
+            const data = await response.json();
+            const wards = data.wards;
+
+            const wardDropdown = document.getElementById("ward");
+            wardDropdown.innerHTML = '<option value="">Chọn phường/xã</option>';
+
+            wards.forEach(ward => {
+                const option = document.createElement("option");
+                option.value = ward.name;
+                option.textContent = ward.name;
+                wardDropdown.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading wards:", error);
+        }
+    }
+
+    // Tải danh sách tỉnh khi trang được tải
+    document.addEventListener("DOMContentLoaded", loadProvinces);
+</script>

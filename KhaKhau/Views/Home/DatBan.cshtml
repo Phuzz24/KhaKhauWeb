@@ -1,0 +1,191 @@
+﻿@{
+    ViewData["Title"] = "Đặt bàn";
+    Layout = "_HomeLayout";
+}
+<link href="~/css/datban.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="container">
+    <div class="booking-header animate__animated animate__fadeIn">
+        <h1>Đặt bàn trực tuyến</h1>
+        <p>Hãy chọn bàn và điền thông tin để đặt chỗ</p>
+    </div>
+
+
+    <div class="booking-section">
+        <div class="table-layout animate__animated animate__fadeInLeft">
+            <h2>Sơ đồ bàn</h2>
+            <div class="table-grid">
+                <div class="table-item">Bàn 1<br>4 ghế</div>
+                <div class="table-item occupied">Bàn 2<br>6 ghế</div>
+                <div class="table-item">Bàn 3<br>2 ghế</div>
+                <div class="table-item">Bàn 4<br>8 ghế</div>
+                <div class="table-item occupied">Bàn 5<br>4 ghế</div>
+                <div class="table-item">Bàn 6<br>6 ghế</div>
+                <div class="table-item">Bàn 7<br>4 ghế</div>
+                <div class="table-item">Bàn 8<br>2 ghế</div>
+            </div>
+        </div>
+
+        <div class="booking-form animate__animated animate__fadeInRight">
+            <h2>Thông tin đặt bàn</h2>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="name">Họ và tên</label>
+                    <input type="text" id="name" required>
+                    <span class="error-message">Vui lòng nhập họ tên</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="tel" id="phone" required>
+                    <span class="error-message">Vui lòng nhập số điện thoại hợp lệ</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Ngày đặt</label>
+                    <input type="date" id="date" required>
+                    <span class="error-message">Vui lòng chọn ngày</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Giờ đặt</label>
+                    <select id="time" required>
+                        <option value="">Chọn giờ</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                    </select>
+                    <span class="error-message">Vui lòng chọn giờ</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="guests">Số người</label>
+                    <select id="guests" required>
+                        <option value="">Chọn số người</option>
+                        <option value="1">1 người</option>
+                        <option value="2">2 người</option>
+                        <option value="4">4 người</option>
+                        <option value="6">6 người</option>
+                        <option value="8">8 người</option>
+                    </select>
+                    <span class="error-message">Vui lòng chọn số người</span>
+                </div>
+
+                <button type="submit" class="btn-book">Đặt bàn ngay</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.table-item:not(.occupied)').forEach(table => {
+        table.addEventListener('click', () => {
+            document.querySelectorAll('.table-item').forEach(t => t.classList.remove('selected'));
+            table.classList.add('selected');
+        });
+    });
+
+    const form = document.getElementById('bookingForm');
+    const inputs = form.querySelectorAll('input, select');
+
+    function validatePhone(phone) {
+        // Kiểm tra số điện thoại bắt đầu bằng 0 và có độ dài từ 10 đến 11 ký tự
+        return /^0\d{9,10}$/.test(phone);
+    }
+
+
+    function validateDate(date) {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        return selectedDate >= today;
+    }
+
+    function showError(input, message) {
+        input.classList.add('error-input');
+        const errorMessage = input.nextElementSibling;
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = message;
+    }
+
+    function hideError(input) {
+        input.classList.remove('error-input');
+        const errorMessage = input.nextElementSibling;
+        errorMessage.style.display = 'none';
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', () => hideError(input));
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let isValid = true;
+
+        // Validate name
+        const name = document.getElementById('name');
+        if (!name.value.trim()) {
+            showError(name, 'Vui lòng nhập họ tên');
+            isValid = false;
+        }
+
+        // Validate phone
+        const phone = document.getElementById('phone');
+        if (!validatePhone(phone.value)) {
+            showError(phone, 'Số điện thoại không hợp lệ');
+            isValid = false;
+        }
+
+        // Validate date
+        const date = document.getElementById('date');
+        if (!date.value || !validateDate(date.value)) {
+            showError(date, 'Vui lòng chọn ngày hợp lệ');
+            isValid = false;
+        }
+
+        // Validate time
+        const time = document.getElementById('time');
+        if (!time.value) {
+            showError(time, 'Vui lòng chọn giờ');
+            isValid = false;
+        }
+
+        // Validate guests
+        const guests = document.getElementById('guests');
+        if (!guests.value) {
+            showError(guests, 'Vui lòng chọn số người');
+            isValid = false;
+        }
+
+        // Validate table selection
+        const selectedTable = document.querySelector('.table-item.selected');
+        if (!selectedTable) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng chọn bàn trước khi đặt',
+            });
+            return;
+        }
+
+        if (isValid) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Đặt bàn thành công!',
+                text: 'Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            }).then(() => {
+                form.reset();
+                selectedTable.classList.remove('selected');
+            });
+        }
+    });
+</script>

@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KhaKhau.Repositories
 {
-    public class EFProductRepository :IProductRepository
+    public class EFProductRepository : IProductRepository
     {
         private readonly KhaKhauContext _context;
-        public EFProductRepository( KhaKhauContext context)
+        public EFProductRepository(KhaKhauContext context)
         {
             _context = context;
         }
@@ -43,7 +43,7 @@ namespace KhaKhau.Repositories
             await _context.SaveChangesAsync();
         }
         //27/10 moi  them:
-      
+
         public async Task<IEnumerable<Category>> Categories()
         {
             return await _context.Categories.ToListAsync();
@@ -57,24 +57,24 @@ namespace KhaKhau.Repositories
             }
 
             IEnumerable<Product> products = await (from product in _context.Products
-                                                  join category in _context.Categories
-                                                  on product.CategoryId equals category.Id
+                                                   join category in _context.Categories
+                                                   on product.CategoryId equals category.Id
                                                    join stock in _context.Stocks
                                                    on product.Id equals stock.Productid
                                                    into product_stocks
                                                    from productWithStocks in product_stocks.DefaultIfEmpty()
                                                    where string.IsNullOrWhiteSpace(sTerm) || (product != null && product.Name.ToLower().StartsWith(sTerm))
                                                    select new Product
-                                                  {
-                                                      Id = product.Id,
-                                                      ImageUrl = product.ImageUrl,
-                                                      Name = product.Name,
-                                                      Description = product.Description,
-                                                      CategoryId = product.CategoryId,
-                                                      Price = product.Price,
-                                                      CategoryName = category.Name,
-                                                      Quantity = productWithStocks == null ? 0 : productWithStocks.Quantity
-                                                  }
+                                                   {
+                                                       Id = product.Id,
+                                                       ImageUrl = product.ImageUrl,
+                                                       Name = product.Name,
+                                                       Description = product.Description,
+                                                       CategoryId = product.CategoryId,
+                                                       Price = product.Price,
+                                                       CategoryName = category.Name,
+                                                       Quantity = productWithStocks == null ? 0 : productWithStocks.Quantity
+                                                   }
                          ).ToListAsync();
             if (categoryId > 0)
             {

@@ -16,7 +16,7 @@ namespace KhaKhau.Areas.Admin.Controllers
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserOrderRepository _userOrderRepository;
-        
+
         public ProductManagerController(IProductRepository productRepository,
         ICategoryRepository categoryRepository, IUserOrderRepository userOrderRepository)
         {
@@ -45,9 +45,9 @@ namespace KhaKhau.Areas.Admin.Controllers
             ModelState.Remove("CategoryName"); // Loại bỏ xác thực ModelState cho   ImageUrl
             ModelState.Remove("CartDetail");
             ModelState.Remove("OrderDetail");
-			ModelState.Remove("Stock"); // Loại bỏ xác thực ModelState cho   ...
+            ModelState.Remove("Stock"); // Loại bỏ xác thực ModelState cho   ...
 
-			if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if (imageUrl != null)
                 {
@@ -116,34 +116,34 @@ namespace KhaKhau.Areas.Admin.Controllers
                     // Lưu hình ảnh mới
                     product.ImageUrl = await SaveImage(imageUrl);
                 }
-                    // Cập nhật các thông tin khác của sản phẩm
-                    existingProduct.Name = product.Name;
-                    existingProduct.Price = product.Price;
-                    existingProduct.Description = product.Description;
-                    existingProduct.CategoryId = product.CategoryId;
-                    existingProduct.ImageUrl = product.ImageUrl;
-                    await _productRepository.UpdateAsync(existingProduct);
-                    return RedirectToAction(nameof(Index));
-                }  
+                // Cập nhật các thông tin khác của sản phẩm
+                existingProduct.Name = product.Name;
+                existingProduct.Price = product.Price;
+                existingProduct.Description = product.Description;
+                existingProduct.CategoryId = product.CategoryId;
+                existingProduct.ImageUrl = product.ImageUrl;
+                await _productRepository.UpdateAsync(existingProduct);
+                return RedirectToAction(nameof(Index));
+            }
 
-                var categories = await _categoryRepository.GetAllAsync();
-                ViewBag.Categories = new SelectList(categories, "Id", "Name");
-          
-                return View(product);
+            var categories = await _categoryRepository.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+
+            return View(product);
 
 
-            
+
         }
-		//chi tiet san pham
-		public async Task<IActionResult> Display(int id)
-		{
-			var product = await _productRepository.GetByIdAsync(id);
-			if (product == null)
-			{
-				return NotFound();
-			}
-			return View(product);
-		}
+        //chi tiet san pham
+        public async Task<IActionResult> Display(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
         // Hiển thị form xác nhận xóa sản phẩm
         public async Task<IActionResult> Delete(int id)
         {

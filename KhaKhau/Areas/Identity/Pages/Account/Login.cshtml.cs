@@ -108,14 +108,14 @@ namespace KhaKhau.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
         }
-    
+
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-           
+
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -124,7 +124,7 @@ namespace KhaKhau.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                  
+                    TempData["LoginSuccess"] = "true"; // Thêm giá trị vào TempData để xác định đăng nhập thành công
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
