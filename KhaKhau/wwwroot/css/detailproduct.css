@@ -163,7 +163,23 @@ h2 {
         font-size: 1.8rem;
     }
 }
+.review-section {
+    margin-top: 20px;
+}
 
+.review-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #C5705D;
+}
+
+.review {
+    background: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 @media (max-width: 767px) {
     /* Điều chỉnh bố cục hàng ngang thành cột dọc */
     .row {

@@ -11,6 +11,7 @@ namespace KhaKhau.Models
 		public string UserId { get; set; }
 		public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 		[Required]
+		[ForeignKey("OrderStatusId")]
 		public int OrderStatusId { get; set; }
 		public bool IsDeleted { get; set; } = false;
 		[Required]

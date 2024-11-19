@@ -118,14 +118,30 @@ namespace KhaKhau.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                // Thực hiện đăng nhập
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    TempData["LoginSuccess"] = "true"; // Thêm giá trị vào TempData để xác định đăng nhập thành công
-                    return LocalRedirect(returnUrl);
+                    TempData["LoginSuccess"] = "Bạn đã đăng nhập thành công!";
+
+                    // Lấy thông tin người dùng sau khi đăng nhập
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+
+                    // Kiểm tra vai trò và chuyển hướng
+                    if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return LocalRedirect(Url.Content("~/admin/productmanager/index"));
+                    }
+                    else if (await _signInManager.UserManager.IsInRoleAsync(user, "User"))
+                    {
+                        return LocalRedirect(Url.Content("~/Home/Index"));
+                    }
+                    else
+                    {
+                        // Nếu không có vai trò hợp lệ, có thể chuyển hướng về một trang lỗi
+                        return RedirectToPage("/Account/AccessDenied");
+                    }
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -136,7 +152,6 @@ namespace KhaKhau.Areas.Identity.Pages.Account
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
-             
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -144,8 +159,9 @@ namespace KhaKhau.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            // Nếu có lỗi xác thực, hiển thị lại form
             return Page();
         }
+
     }
 }

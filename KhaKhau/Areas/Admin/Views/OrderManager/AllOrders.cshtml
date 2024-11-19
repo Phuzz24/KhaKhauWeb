@@ -1,92 +1,266 @@
 ﻿@using KhaKhau.Models;
-@model IEnumerable<Order> 
-@{
-    ViewData["Title"] = "AllOrders";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-    
+@model IEnumerable<Order>
 
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>AllOrders</h1>
+<!-- Import Stylesheets -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
-<div style="width:100%" class="mt-2">
-    <h4> Orders</h4>
-    @if (Model != null && Model.Count() > 0)
-    {
-        <table class="table table-striped">
-            <tr>
-                <th>Order Date</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>Address</th>
-                <th>Payment Status</th>
-                <th>Order Status</th>
-                <th>Actions</th>
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            </tr>
-            @foreach (var order in Model)
-            {
-                <tr>
-                    <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
-                    <td>@order.Name</td>
-                    <td>@order.Email</td>
-                    <td>@order.MobileNumber</td>
-                    
-                    <td>@order.Address</td>
-                    <td>@order.PaymentMethod | @(order.IsPaid ? "Paid" : "Not Paid")</td>
-                   
-                    @{
-                        switch (order.OrderStatus.StatusName)
-                        {
-                            case "choxacnhan":
-                                <td>
-                                Chờ xác nhận
-                                </td>
-                                break;  
-                            case "danggiao":
-                                <td>
-                                Đang giao
-                                </td>
-                                break; 
-                            case "nhanhang":
-                                <td>
-                                Nhận hàng
-                                </td>
-                                break;
-                            case "huy":
-                                <td class="text-danger">
-                                Hủy 
-                                </td>
-                                break;
-                            default:
-                                <td>Hoàn tiền</td>
-                                break;
+<link href="/admin/css/ordermanagement.css" rel="stylesheet" />
 
-                        }
-                    }
-                    
-                    <td>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#modal-@order.Id" class="btn btn-primary">
-                            Order-Detail
-                        </button>
-                        <a asp-action="UpdateOrderStatus" asp-route-orderId="@order.Id" class="btn btn-info">Change Order Status</a>
-                        <a asp-action="TogglePaymentStatus" asp-route-orderId="@order.Id" class="btn btn-info">Toggle Payment Status</a>
+<div class="container-fluid py-4 animate__animated animate__fadeIn">
+    <!-- Breadcrumb -->
+    <h4 class="breadcrumb-nav animate__animated animate__fadeIn">
+        <a href="/admin">Admin</a>
+        >
+        <a href="/Admin/OrderManager/Index">Danh sách đơn hàng</a>
+    </h4>
 
-                   @* appending modal div here *@
-                   @* Make sure to put this partial tag inside this td block, otherwise it can cause layout related problem*@
-                        @await Html.PartialAsync("/Areas/Admin/Views/OrderManager/_OrderDetailModal.cshtml", new OrderDetailModal { DivId = order.Id.ToString(), OrderDetail = order.OrderDetail })
-                    </td>
+    <!-- Action Buttons -->
 
-                </tr>
+    <div class="d-flex justify-content-end mb-3">
+        <button id="deleteSelected" class="btn btn-danger btn-sm">
+            <i class="bx bx-trash me-1"></i> Xóa đã chọn
+        </button>
+    </div>
+    <!-- Order Table -->
+    <div class="filters mb-4 d-flex flex-wrap gap-3 justify-content-between align-items-center">
+        <div class="filter-item">
+            <label for="paymentStatusFilter" class="form-label fw-bold">Trạng thái thanh toán</label>
+            <select id="paymentStatusFilter" class="form-select">
+                <option value="all">Tất cả</option>
+                <option value="paid">Đã thanh toán</option>
+                <option value="not-paid">Chưa thanh toán</option>
+            </select>
+        </div>
 
-            }
-        </table>
-    }
-    else
-    {
-        <h5>No orders</h5>
-    }
+        <div class="filter-item">
+            <label for="orderStatusFilter" class="form-label">Trạng thái đơn hàng</label>
+            <select id="orderStatusFilter" class="form-select">
+                <option value="all">Tất cả</option>
+                <option value="choxacnhan">Chờ xác nhận</option>
+                <option value="đang giao">Đang giao</option>
+                <option value="đã giao">Đã giao</option>
+                <option value="đã hủy">Đã hủy</option>
+            </select>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold">Danh sách đơn hàng</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table table-bordered" id="ordersTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                                <th><input type="checkbox" id="selectAll" /></th> <!-- Checkbox chọn tất cả -->
+                                <th>#</th>
+                                <th>Ngày đặt</th>
+                                <th>Khách hàng</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Địa chỉ</th>
+                                <th>Trạng thái thanh toán</th>
+                                <th>Trạng thái đơn hàng</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.Select((item, index) => new { item, index }))
+                            {
+                                <tr class="order-row" data-payment="@order.item.IsPaid" data-status="@order.item.OrderStatus?.StatusName.ToLower()">
+                                    <td>
+                                        <input type="checkbox" class="selectOrder" value="@order.item.Id" />
+                                    </td>
+                                    <td>@(order.index + 1)</td>
+                                    <td>@order.item.CreateDate.ToString("dd-MM-yyyy")</td>
+                                    <td>@order.item.Name</td>
+                                    <td>@order.item.Email</td>
+                                    <td>@order.item.MobileNumber</td>
+                                    <td>@order.item.Address</td>
+                                    <td>
+                                        <span class="status-badge @(order.item.IsPaid ? "status-paid" : "status-unpaid")">
+                                            @order.item.PaymentMethod | @(order.item.IsPaid ? "Paid" : "Not Paid")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @switch (order.item.OrderStatus?.StatusName.ToLower())
+                                        {
+                                            case "choxacnhan":
+                                                <span class="status-badge status-waiting">Chờ xác nhận</span>
+                                                break;
+                                            case "đang giao":
+                                                <span class="status-badge status-in-progress">Đang giao</span>
+                                                break;
+                                            case "đã giao":
+                                                <span class="status-badge status-complete">Đã giao</span>
+                                                break;
+                                            case "đã hủy":
+                                                <span class="status-badge status-cancelled">Đã hủy</span>
+                                                break;
+                                            default:
+                                                <span class="status-badge status-unknown">Hoàn tiền</span>
+                                                break;
+                                        }
+                                    </td>
 
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modal-@order.item.Id" class="btn btn-primary">
+                                                <i class="bx bx-detail me-1"></i> Chi tiết
+                                            </button>
+                                            <a asp-action="UpdateOrderStatus" asp-route-orderId="@order.item.Id" class="btn btn-info">
+                                                <i class="bx bx-refresh me-1"></i> Cập nhật trạng thái
+                                            </a>
+                                            <a asp-action="TogglePaymentStatus" asp-route-orderId="@order.item.Id" class="btn btn-success">
+                                                <i class="bx bx-money me-1"></i> Thanh toán
+                                            </a>
+                                        </div>
 
+                                            @* appending modal div here *@
+                                            @* Make sure to put this partial tag inside this td block, otherwise it can cause layout related problem*@
+                                            @await Html.PartialAsync("/Areas/Admin/Views/OrderManager/_OrderDetailModal.cshtml", new OrderDetailModal { DivId = order.item.Id.ToString(), OrderDetail = order.item.OrderDetail })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <h5>Không có đơn hàng nào</h5>
+                }
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Import Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const table = $('#ordersTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+            },
+            ordering: true,
+            searching: true,
+            responsive: true,
+            pageLength: 10,
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
+        });
+
+        // Xử lý bộ lọc
+        $('#paymentStatusFilter, #orderStatusFilter').on('change', function () {
+            let paymentStatus = $('#paymentStatusFilter').val();
+            let orderStatus = $('#orderStatusFilter').val();
+
+            // Lọc các hàng trong bảng
+            $('.order-row').each(function () {
+                let row = $(this);
+                let rowPaymentStatus = row.data('payment') ? 'paid' : 'not-paid';
+                let rowOrderStatus = row.data('status');
+
+                // Kiểm tra điều kiện hiển thị
+                let showRow =
+                    (paymentStatus === 'all' || paymentStatus === rowPaymentStatus) &&
+                    (orderStatus === 'all' || orderStatus === rowOrderStatus);
+
+                // Hiển thị hoặc ẩn hàng
+                if (showRow) {
+                    row.show();
+                } else {
+                    row.hide();
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        // Chọn tất cả checkbox
+        $('#selectAll').on('change', function () {
+            $('.selectOrder').prop('checked', $(this).prop('checked'));
+        });
+
+        // Xử lý xóa nhiều đơn hàng
+        $('#deleteSelected').on('click', function () {
+            let selectedOrders = $('.selectOrder:checked').map(function () {
+                return $(this).val();
+            }).get();
+
+            if (selectedOrders.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Chưa chọn đơn hàng',
+                    text: 'Vui lòng chọn ít nhất một đơn hàng để xóa!',
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: `Bạn có chắc muốn xóa ${selectedOrders.length} đơn hàng đã chọn?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74c3c',
+                cancelButtonColor: '#858796',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Gửi yêu cầu xóa lên server
+                    $.ajax({
+                        url: '/admin/OrderManager/DeleteOrders',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(selectedOrders),
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Đã xóa',
+                                    text: response.message,
+                                }).then(() => {
+                                    location.reload(); // Tải lại trang sau khi xóa thành công
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Thất bại',
+                                    text: response.message,
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Có lỗi xảy ra khi gửi yêu cầu xóa.',
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+
+
+</script>
+
+                                   

@@ -275,7 +275,7 @@ namespace KhaKhau.Repositories
             var query = _context.Orders
                 .Include(o => o.OrderStatus)
                 .Include(o => o.OrderDetail)
-                .Where(o => o.UserId == userId && !o.IsDeleted);
+                .Where(o => o.UserId == userId);
 
             if (!string.IsNullOrEmpty(orderCode))
             {
@@ -287,8 +287,9 @@ namespace KhaKhau.Repositories
                 query = query.Where(o => o.OrderStatusId == orderStatus);
             }
 
-            return await query.OrderByDescending(o => o.CreateDate).ToListAsync();
+            return await query.ToListAsync();
         }
+
 
         public async Task<Order> GetOrderById(int orderId)
         {
@@ -304,15 +305,19 @@ namespace KhaKhau.Repositories
 
         public async Task<bool> CancelOrder(int orderId, string userId)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId && o.OrderStatusId == 1); // Chỉ cho phép hủy nếu trạng thái là chờ xác nhận
-
-            if (order == null)
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);
+            if (order == null || order.OrderStatusId != 1) // Chỉ cho phép hủy khi trạng thái là "Chờ xác nhận"
+            {
                 return false;
+            }
 
-            order.IsDeleted = true;
+            order.OrderStatusId = 1002; // Mặc định "đã hủy" là 1002
+            _context.Orders.Update(order);
             await _context.SaveChangesAsync();
             return true;
         }
+
+
 
 
 

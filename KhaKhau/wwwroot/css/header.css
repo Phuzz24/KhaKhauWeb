@@ -113,12 +113,14 @@ body {
         }
 
     /* Dropdown cải tiến */
-    /* Dropdown chỉnh sửa */
-    .auth-container .dropdown {
-        position: relative;
-        display: inline-block;
-    }
+   
+/* Dropdown Container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
+/* Dropdown Toggle Button */
 .dropdown-toggle {
     display: flex;
     align-items: center;
@@ -129,56 +131,58 @@ body {
     padding: 10px;
     font-weight: bold;
     transition: color 0.3s ease;
+    position: relative; /* Để tránh ảnh hưởng bởi các phần tử khác */
 }
 
-    .dropdown-toggle:hover {
-        color: #650b0b;
-    }
+.dropdown-toggle:hover {
+    color: #650b0b;
+}
 
-    .dropdown-toggle i {
-        margin-left: 5px;
-        font-size: 14px;
-        transition: transform 0.3s ease;
-    }
+/* Icon trong dropdown */
+.dropdown-toggle i {
+    margin-left: 5px;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
 
-
+/* Dropdown Menu */
 .dropdown-menu {
     display: none; /* Ẩn mặc định */
     position: absolute;
-    top: calc(100% + 5px); /* Xuất hiện ngay bên dưới dropdown */
-    right: 0; /* Canh phải */
+    top: calc(100% + 5px); /* Xuất hiện ngay bên dưới toggle */
+    right: 0; /* Canh phải với phần tử cha */
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    min-width: 180px;
+    min-width: 200px; /* Đảm bảo kích thước menu đủ lớn */
     padding: 10px 0;
     animation: fadeIn 0.3s ease; /* Hiệu ứng xuất hiện */
 }
 
-    /* Dropdown menu items */
-    .dropdown-menu a,
-    .dropdown-menu button {
-        padding: 10px 15px;
-        border: none;
-        background: transparent;
-        width: 100%; /* Chiều rộng chiếm toàn bộ */
-        box-sizing: border-box; /* Đảm bảo tính kích thước với padding */
-        display: block; /* Hiển thị dạng khối */
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
+/* Dropdown Menu Items */
+.dropdown-menu a,
+.dropdown-menu button {
+    padding: 10px 15px;
+    border: none;
+    background: transparent;
+    text-align: left; /* Căn trái nội dung */
+    width: 100%; /* Chiều rộng chiếm toàn bộ */
+    box-sizing: border-box;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-        .dropdown-menu a:hover,
-        .dropdown-menu button:hover {
-            background-color: #f9f9f9;
-            color: #650b0b;
-            outline: none; /* Loại bỏ viền mặc định khi hover */
-            transform: translateX(5px); /* Hiệu ứng dịch nhẹ sang phải */
-        }
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: #f9f9f9;
+    color: #650b0b;
+    outline: none; /* Loại bỏ viền mặc định khi hover */
+    transform: translateX(5px); /* Hiệu ứng dịch nhẹ sang phải */
+}
 
-
-
+/* Hiển thị dropdown khi hover hoặc focus */
 .dropdown:hover .dropdown-menu,
 .dropdown:focus-within .dropdown-menu {
     display: block; /* Hiển thị khi hover hoặc focus */

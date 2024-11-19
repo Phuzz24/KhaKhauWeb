@@ -1,4 +1,10 @@
-﻿@{
+﻿@using KhaKhau.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+@inject SignInManager<ApplicationUser> SignInManager
+
+@inject UserManager<ApplicationUser> UserManager
+@{
     ViewData["Title"] = "Home Page";
     Layout = "_HomeLayout";
 }
@@ -66,16 +72,24 @@
                         <p class="card-text">@product.Price.ToString("#,##0") đ</p>
                         <p class="card-text">@product.Category.Name</p>
                         <div class="button-group">
-                            <button class="btn btn-add-to-cart" onclick="addToCart(@product.Id)">Thêm vào giỏ</button>
-                            <button class="btn btn-buy-now" onclick="buyNow(@product.Id)">Mua ngay</button>
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <button class="btn btn-add-to-cart" onclick="addToCart(@product.Id)">Thêm vào giỏ</button>
+                                <button class="btn btn-buy-now" onclick="buyNow(@product.Id)">Mua ngay</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-add-to-cart" onclick="requireLogin()">Thêm vào giỏ</button>
+                                <button class="btn btn-buy-now" onclick="requireLogin()">Mua ngay</button>
+                            }
                         </div>
-
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
 
 
 <!-- Additional CSS for Top Selling Products -->
@@ -221,6 +235,21 @@
             card.classList.remove('hover-effect');
         });
     });
+    function requireLogin() {
+        Swal.fire({
+            title: 'Yêu cầu đăng nhập',
+            text: 'Vui lòng đăng nhập để thực hiện thao tác này.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Đăng nhập',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Chuyển hướng đến trang đăng nhập
+                window.location.href = '/Identity/Account/Login';
+            }
+        });
+    }
     async function addToCart(productId) {
         try {
             const response = await fetch(`/Cart/AddItem?productId=${productId}&qty=1`, {

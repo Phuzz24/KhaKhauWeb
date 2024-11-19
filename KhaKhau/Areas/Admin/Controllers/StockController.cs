@@ -38,7 +38,7 @@ namespace KhaKhau.Areas.Admin.Controllers
             try
             {
                 await _stockRepository.ManageStock(stock);
-                TempData["successMessage"] = "Stock is updated successfully.";
+                TempData["UpdateMessage"] = "Cập nhật kho hàng thành công!";
             }
             catch (Exception ex)
             {

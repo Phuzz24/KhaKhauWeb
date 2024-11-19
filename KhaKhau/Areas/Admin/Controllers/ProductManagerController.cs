@@ -54,6 +54,8 @@ namespace KhaKhau.Areas.Admin.Controllers
                     product.ImageUrl = await SaveImage(imageUrl);
                 }
                 await _productRepository.AddAsync(product);
+                //Hiển thị thông báo khi thêm thành công
+                TempData["SuccessMessage"] = "Sản phẩm đã được thêm thành công!";
                 return RedirectToAction(nameof(Index));
             }
             var categories = await _categoryRepository.GetAllAsync();
@@ -122,7 +124,9 @@ namespace KhaKhau.Areas.Admin.Controllers
                 existingProduct.Description = product.Description;
                 existingProduct.CategoryId = product.CategoryId;
                 existingProduct.ImageUrl = product.ImageUrl;
+
                 await _productRepository.UpdateAsync(existingProduct);
+                TempData["SuccessMessage"] = "Sản phẩm đã được cập nhật thành công!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -167,5 +171,40 @@ namespace KhaKhau.Areas.Admin.Controllers
             var orders = await _userOrderRepository.UserOrders(true);
             return View(orders);
         }
+        [HttpPost]
+        public async Task<IActionResult> DeleteMultiple([FromBody] List<int> productIds)
+        {
+            if (productIds == null || !productIds.Any())
+            {
+                return BadRequest("Không có sản phẩm nào được chọn.");
+            }
+
+            foreach (var id in productIds)
+            {
+                await _productRepository.DeleteAsync(id);
+            }
+
+            return Ok(); // Trả về thành công
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                // Nếu không nhập gì, trả về danh sách sản phẩm gốc
+                return RedirectToAction("Index");
+            }
+
+            // Lấy danh sách sản phẩm phù hợp từ kho dữ liệu
+            var products = await _productRepository.GetAllAsync();
+            var filteredProducts = products
+                .Where(p => p.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            // Truyền kết quả tìm kiếm sang View
+            return View("Index", filteredProducts);
+        }
+
     }
 }

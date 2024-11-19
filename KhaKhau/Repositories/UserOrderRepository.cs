@@ -74,5 +74,16 @@ namespace KhaKhau.Repositories
             order.IsPaid = !order.IsPaid;
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteOrders(List<int> orderIds)
+        {
+            var ordersToDelete = _context.Orders.Where(order => orderIds.Contains(order.Id)).ToList();
+
+            if (ordersToDelete.Any())
+            {
+                _context.Orders.RemoveRange(ordersToDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }

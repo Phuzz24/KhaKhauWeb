@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using KhaKhau.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace KhaKhau.Areas.Admin.Controllers
 {
@@ -79,6 +80,27 @@ namespace KhaKhau.Areas.Admin.Controllers
             }
             return RedirectToAction(nameof(UpdateOrderStatus), new { orderId = data.OrderId });
         }
+        [HttpPost]
+        public async Task<IActionResult> DeleteOrders([FromBody] List<int> orderIds)
+        {
+            if (orderIds == null || !orderIds.Any())
+            {
+                return Json(new { success = false, message = "Không có đơn hàng nào được chọn." });
+            }
+
+            try
+            {
+                await _userOrderRepository.DeleteOrders(orderIds); // Thực hiện xóa các đơn hàng
+                return Json(new { success = true, message = "Xóa thành công các đơn hàng đã chọn." });
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần
+                return Json(new { success = false, message = "Có lỗi xảy ra khi xóa các đơn hàng." });
+            }
+        }
+
+
 
 
         public IActionResult Dashboard()

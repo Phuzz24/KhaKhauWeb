@@ -92,9 +92,8 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Quản lý menu:</h6>
+                        <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Index">Xem</a>
                         <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Add">Thêm</a>
-                        <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Add">Xóa</a>
-                        <a class="collapse-item" asp-area="Admin" asp-controller="ProductManager" asp-action="Update">Sửa</a>
                     </div>
                 </div>
             </li>
@@ -141,25 +140,35 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                   aria-expanded="true" aria-controls="collapsePages">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
+                   aria-expanded="true" aria-controls="collapseUser">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Nhân viên</span>
+                    <span>Người dùng</span>
                 </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Quản lý nhân viên:</h6>
-                        <a class="collapse-item" asp-area="Admin" asp-controller="UserManager" asp-action="Index">Thêm</a>
-                        <a class="collapse-item" href="register.html">
-                            Xóa
-                        </a>
-                        <a class="collapse-item" href="forgot-password.html">
-                            Sửa
-                        </a>
-
+                        <h6 class="collapse-header">Quản lý người dùng:</h6>
+                        <a class="collapse-item" asp-area="Admin" asp-controller="UserManager" asp-action="Index">Xem</a>
+                        <a class="collapse-item" href="register.html">Thêm</a>
                     </div>
                 </div>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory"
+                   aria-expanded="true" aria-controls="collapseCategory">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Loại</span>
+                </a>
+                <div id="collapseCategory" class="collapse" aria-labelledby="headingCategory" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Quản lý loại:</h6>
+                        <a class="collapse-item" asp-area="Admin" asp-controller="Categories" asp-action="Index">Xem</a>
+                        <a class="collapse-item" href="register.html">Thêm</a>
+                    </div>
+                </div>
+            </li>
+
 
             @*             <!-- Nav Item - Charts -->
             *@
@@ -202,17 +211,18 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <form method="get" asp-action="Search" asp-controller="ProductManager" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            <input type="text" name="searchTerm" class="form-control bg-light border-0 small" placeholder="Nhập tên sản phẩm..."
                                    aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
                         </div>
                     </form>
+
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -432,7 +442,29 @@
     <!-- Page level custom scripts -->
     <script src="~/admin/js/demo/chart-area-demo.js"></script>
     <script src="~/admin/js/demo/chart-pie-demo.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (TempData["LoginSuccess"] != null)
+    {
+        <script>
+            Swal.fire({
+                        title: 'Đăng nhập thành công!',
+                        text: 'Bạn đã đăng nhập thành công.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+        </script>
+    }
+    @if (TempData["LogoutSuccess"] != null)
+    {
+        <script>
+            Swal.fire({
+                title: 'Đăng xuất thành công!',
+                text: 'Hẹn gặp lại bạn!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    }
 </body>
 
 </html>

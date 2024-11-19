@@ -4,59 +4,79 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<link href="/admin/css/usermanager.css" rel="stylesheet" />
 @inject SignInManager<ApplicationUser> SignInManager
 
 @inject UserManager<ApplicationUser> UserManager
 
 @model IEnumerable<KhaKhau.Areas.Identity.Data.ApplicationUser>
-<div class="container-fluid"></div>
-<h1>List Menu</h1>
-<a class="btn btn-light" id="btn-create" asp-area="Admin" asp-controller="UserManager" asp-action="Add">Create New</a>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>PhoneNumber</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.FirstName</td> 
-                <td>@user.LastName</td>
-                <td>@user.Email</td>
-                <td>@user.Address</td>
-                <td>@user.PhoneNumber</td>
+    <div class="container-fluid py-4">
+        <!-- Breadcrumb -->
+        <h4 class="breadcrumb-nav animate__animated animate__fadeIn">
+            <a href="/admin">Admin</a> > <a href="/Admin/UserManager/Index">Danh sách người dùng</a>
+        </h4>
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between mb-4 action-buttons animate__animated animate__fadeIn">
+        <a id="btn-create" class="btn btn-primary" href="/Admin/UserManager/Add">
+            <i class="fas fa-plus"></i> Thêm người dùng mới
+        </a>
+        <button id="deleteSelected" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Xóa đã chọn
+        </button>
+    </div>
 
-
-                
-               
-                <td>
-                    @if (user.Id.Equals("da9c226b-c79b-4d64-853d-19dd75bc50ef"))
-                    {
-                       <div style="display:inline-flex">
-                        <a class="btn btn-info" asp-action="Display" asp-route-id="@user.Id">View</a>
-						|	
-                        <p class="text-justify">Admin</p>
-						</div>
-                    }
-                    else
-                    {
-                        <a class="btn btn-info" asp-action="Display" asp-route-id="@user.Id">View</a>
-                        <a class="btn btn-success" asp-action="Update" asp-route-id="@user.Id">Edit</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@user.Id">Delete</a>
-                    }
-                   
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- User Table -->
+    <div class="card shadow mb-4 animate__animated animate__fadeIn">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold">Danh sách người dùng</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="userTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th><input type="checkbox" id="selectAll" /></th>
+                            <th>Họ</th>
+                            <th>Tên</th>
+                            <th>Email</th>
+                            <th>Địa chỉ</th>
+                            <th>Số điện thoại</th>
+                            <th>Tùy chỉnh</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Select((item, index) => new { item, index }))
+                        {
+                            <tr>
+                                <td>@(user.index + 1)</td>
+                                <td>
+                                    <input type="checkbox" class="delete-checkbox" value="@user.item.Id" />
+                                </td>
+                                <td>@user.item.FirstName</td>
+                                <td>@user.item.LastName</td>
+                                <td>@user.item.Email</td>
+                                <td>@user.item.Address</td>
+                                <td>@user.item.PhoneNumber</td>
+                                <td>
+                                    <a class="btn btn-link text-info" asp-action="Display" asp-route-id="@user.item.Id" title="Xem">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a class="btn btn-link text-success" asp-action="Update" asp-route-id="@user.item.Id" title="Chỉnh sửa">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-link text-danger delete-single" data-id="@user.item.Id" title="Xóa">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 <style>
 
 </style>
@@ -64,3 +84,55 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 
+<script>
+    $('#selectAll').on('change', function () {
+        $('.delete-checkbox').prop('checked', $(this).prop('checked'));
+    });
+
+    $('#deleteSelected').on('click', function () {
+        const selectedIds = $('.delete-checkbox:checked').map(function () {
+            return $(this).val();
+        }).get();
+
+        if (selectedIds.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Không có người dùng nào được chọn!',
+                text: 'Vui lòng chọn ít nhất một người dùng để xóa.',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa?',
+            text: `Bạn sắp xóa ${selectedIds.length} người dùng.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Thực hiện xóa qua AJAX
+            }
+        });
+    });
+    $(document).on('click', '.delete-single', function () {
+        const userId = $(this).data('id');
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa?',
+            text: 'Người dùng này sẽ bị xóa vĩnh viễn.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Gửi AJAX xóa người dùng
+            }
+        });
+    });
+
+</script>

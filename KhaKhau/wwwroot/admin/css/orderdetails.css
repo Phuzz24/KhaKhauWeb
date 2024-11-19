@@ -1,0 +1,149 @@
+﻿<style >
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-radius: 15px 15px 0 0;
+    padding: 1rem 1.5rem;
+}
+
+.modal-title {
+    font-weight: 600;
+    color: #2d3436;
+    display: flex;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding: 1rem 1.5rem;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+    .table thead th {
+        background: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        padding: 0.75rem;
+    }
+
+    .table tbody td {
+        padding: 1rem 0.75rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.btn {
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background: #e9ecef;
+    border: none;
+    color: #495057;
+}
+
+    .btn-secondary:hover {
+        background: #dee2e6;
+        transform: translateY(-1px);
+    }
+
+.btn-close {
+    background: none;
+    padding: 0.5rem;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+    .btn-close:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+    }
+
+/* Animation */
+.modal.fade .modal-dialog {
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .table {
+        font-size: 0.875rem;
+    }
+
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+}
+
+/* Custom scrollbar */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+    .modal-body::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+/* Hover effect on table rows */
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+/* Price formatting */
+.text-primary {
+    color: #4361ee !important;
+}
+
+</style >

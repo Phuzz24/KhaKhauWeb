@@ -43,13 +43,16 @@ namespace KhaKhau.Controllers
 
             if (success)
             {
+                TempData["Message"] = "Đơn hàng đã được hủy thành công.";
                 return Json(new { success = true, message = "Đơn hàng đã được hủy thành công." });
             }
             else
             {
+                TempData["Error"] = "Không thể hủy đơn hàng. Vui lòng thử lại.";
                 return Json(new { success = false, message = "Không thể hủy đơn hàng. Vui lòng thử lại." });
             }
         }
+
 
     }
 }

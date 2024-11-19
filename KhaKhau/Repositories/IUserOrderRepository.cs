@@ -9,5 +9,7 @@
         Task<IEnumerable<OrderStatus>> GetOrderStatuses();
         Task TogglePaymentStatus(int orderId);
 
+        Task DeleteOrders(List<int> orderIds);
+
     }
 }

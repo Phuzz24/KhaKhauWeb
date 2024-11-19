@@ -1,0 +1,81 @@
+﻿@using KhaKhau.Areas.Admin.Models
+@model StatisticsViewModel
+@{
+    ViewData["Title"] = "Thống kê";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="container-fluid py-4">
+    <h4 class="breadcrumb-nav animate__animated animate__fadeIn">
+        <a href="/admin">Admin</a> > Thống kê
+    </h4>
+
+    <div class="row">
+        <!-- Thống kê đơn hàng -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h6>Thống kê đơn hàng</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Hôm nay:</strong> @Model.OrdersToday</p>
+                    <p><strong>7 ngày qua:</strong> @Model.OrdersLast7Days</p>
+                    <p><strong>10 ngày trước:</strong> @Model.OrdersLast10Days</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thống kê sản phẩm bán chạy -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h6>Sản phẩm bán chạy nhất</h6>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        @foreach (var product in Model.TopSellingProducts)
+                        {
+                            <li>@product.ProductName: @product.TotalQuantity </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thống kê tồn kho -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">
+                    <h6>Tồn kho</h6>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        @foreach (var stock in Model.StockSummary)
+                        {
+                            <li>@stock.ProductName: @stock.Quantity </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .card-body ul {
+        padding-left: 20px;
+    }
+
+        .card-body ul li {
+            margin-bottom: 8px;
+        }
+
+</style>

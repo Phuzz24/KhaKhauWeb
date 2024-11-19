@@ -1,23 +1,119 @@
 ﻿@using KhaKhau.Models
 @model StockDTO
 @{
-    ViewData["Title"] = "ManangeStock";
+    ViewData["Title"] = "Manage Stock";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-<div style="width:50%">
-<h2> Manage Stock </h2>
-<a asp-action="Index" asp-controller="Stock" class="btn btn-primary">Back</a>
-<form asp-action="ManangeStock">
-   <input type="hidden" asp-for="ProductId" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-   <div class="my-2">
-      <label>Quantity</label>
-      <input type="number" class="form-control" asp-for="Quantity" />
-      <span asp-validation-for="Quantity" class="text-danger"></span>
-   </div>
+<div class="container">
+    <!-- Nút quay lại -->
+    <div class="d-flex justify-content-start mb-4">
+        <a asp-action="Index" asp-controller="Stock" class="btn btn-secondary">
+            <i class="bx bx-arrow-back"></i> Quay lại
+        </a>
+    </div>
 
-   <div class="my-2">
-      <button type="submit" class="btn btn-info">Update</button>
-   </div>
-</form>
+    <!-- Form quản lý kho -->
+    <div class="card shadow p-4">
+        <h2 class="text-center text-primary mb-4">Quản lý kho hàng</h2>
+        <form asp-action="ManangeStock">
+            <input type="hidden" asp-for="ProductId" />
+
+            <div class="form-group mb-3">
+                <label for="quantity" class="form-label">Số lượng</label>
+                <input id="quantity" type="number" class="form-control" asp-for="Quantity" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bx bx-save"></i> Cập nhật
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Thêm sự kiện form submit để hiển thị thông báo
+    document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault(); // Ngăn form submit
+        Swal.fire({
+            title: "Thành công!",
+            text: "Cập nhật kho hàng thành công.",
+            icon: "success",
+            confirmButtonText: "OK",
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Nếu người dùng nhấn OK, tiến hành submit form
+                e.target.submit();
+            }
+        });
+    });
+</script>
+
+<style>
+    :root {
+        --primary-color: #4e73df;
+        --secondary-color: #858796;
+        --success-color: #1cc88a;
+        --danger-color: #e74a3b;
+    }
+
+    body {
+        background-color: #f8f9fc;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .card h2 {
+            font-weight: 600;
+        }
+
+    .btn-secondary {
+        background-color: var(--secondary-color);
+        color: #ffffff;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: var(--success-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+    .form-control {
+        border-radius: 8px;
+    }
+
+</style>

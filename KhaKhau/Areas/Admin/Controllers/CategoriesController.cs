@@ -32,10 +32,12 @@ namespace KhaKhau.Areas.Admin.Controllers
             {
                 _context.Add(category);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Danh mục đã được thêm thành công!";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)

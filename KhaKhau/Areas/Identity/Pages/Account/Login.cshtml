@@ -95,18 +95,20 @@
                     this.style.boxShadow = 'none';
                 });
             });
-            // Kiểm tra nếu TempData chứa thông báo đăng nhập thành công
+            // Hiển thị thông báo đăng nhập thành công
             @if (TempData["LoginSuccess"] != null)
             {
                 <text>
                     Swal.fire({
                         title: 'Đăng nhập thành công!',
-                        text: 'Bạn đã đăng nhập thành công.',
+                        text: '@TempData["LoginSuccess"]',
                         icon: 'success',
                         confirmButtonText: 'OK'
                     });
                 </text>
             }
+
+                // Kiểm tra thông báo đăng xuất
             @if (TempData["LogoutSuccess"] != null)
             {
                 <text>

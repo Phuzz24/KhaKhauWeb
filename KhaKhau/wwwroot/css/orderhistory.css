@@ -95,50 +95,65 @@ h2 {
         }
 
 .btn-info {
-    background-color: var(--info-color);
-    border: none;
-    color: white;
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    font-weight: bold;
     transition: all 0.3s ease;
 }
 
     .btn-info:hover {
-        background-color: #2196F3;
-        transform: translateY(-2px);
+        background-color: #0056b3;
+        border-color: #004085;
     }
 
+/* Button Danger (Hủy đơn) */
 .btn-danger {
-    background-color: var(--danger-color);
-    border: none;
+    background-color: #e74a3b; /* Đỏ đậm */
+    border-color: #e74a3b;
+    color: #fff;
+    font-weight: bold;
     transition: all 0.3s ease;
 }
 
     .btn-danger:hover {
-        background-color: #cc0000;
-        transform: translateY(-2px);
+        background-color: #c9302c;
+        border-color: #ac2925;
     }
 
 /* Status badges */
-.status-badge {
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-weight: 500;
-    font-size: 0.9em;
-}
-
 .status-pending {
-    background-color: #ffeeba;
+    background-color: #ffefa0; /* Vàng nhạt */
     color: #856404;
+    padding: 10px 10px;
+    border-radius:8px;
+    font-weight: bold;
 }
 
 .status-delivering {
-    background-color: #b8e6ff;
+    background-color: #cce5ff; /* Xanh nhạt */
     color: #004085;
+    font-weight: bold;
+    padding: 10px 10px;
+    border-radius: 8px;
 }
 
 .status-delivered {
-    background-color: #c3e6cb;
+    background-color: #d4edda; /* Xanh lá nhạt */
     color: #155724;
+    font-weight: bold;
+    padding: 10px 10px;
+    border-radius: 8px;
 }
+
+.status-danger {
+    background-color: #f8d7da; /* Đỏ nhạt */
+    color: #721c24;
+    font-weight: bold;
+    padding: 10px 10px;
+    border-radius: 8px;
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
